@@ -42,7 +42,7 @@ bool Serializer::isEmpty() const
 	return m_data.isEmpty();
 }
 
-Serializer::operator bool()
+Serializer::operator bool() const
 {
 	return m_data.isEmpty();
 }

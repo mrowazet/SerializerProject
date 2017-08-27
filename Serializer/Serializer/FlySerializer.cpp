@@ -35,7 +35,7 @@ bool FlySerializer::isEmpty() const
 	return false;
 }
 
-FlySerializer::operator bool()
+FlySerializer::operator bool() const
 {
 	return false;
 }

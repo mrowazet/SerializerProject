@@ -25,7 +25,7 @@ public:
 	virtual void clear() = 0;
 	virtual unsigned int size() const = 0;
 	virtual bool isEmpty() const = 0;
-	virtual operator bool() = 0;
+	virtual operator bool() const = 0;
 
 	virtual const ByteArray & getData() const = 0;
 

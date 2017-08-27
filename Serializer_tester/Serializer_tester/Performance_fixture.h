@@ -14,6 +14,7 @@ class Performance_fixture : public testing::Test
 		virtual void SetUp() override;
 		virtual void TearDown() override;
 
+		void enableAllTCs();
 	protected:
 		Stopwatch m_stopwatch;
 };

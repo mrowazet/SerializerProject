@@ -13,16 +13,18 @@ namespace
 	const bool ON = true;
 	const bool OFF = false;
 
+	bool ALL_TC_ENABLED = OFF;
+
 	//TESTS 
-	const bool ByteArray_resize_zero_to_value = OFF;
-	const bool Add_new_double_to_serializer_three_bytes_more_needed = OFF;
-	const bool Add_ByteArray_to_serializer = OFF;
-	const bool Add_string_to_serializer = OFF;
-	const bool Get_string_from_serializer = OFF;
-	const bool ByteArray_getAsString = OFF;
-	const bool Append_ByteArray_to_ByteArray = OFF;
-	const bool Add_c_str_to_serializer = OFF;
-	const bool Load_data_from_file_using_SimpleIO = OFF;
+	bool ByteArray_resize_zero_to_value = OFF;
+	bool Add_new_double_to_serializer_three_bytes_more_needed = OFF;
+	bool Add_ByteArray_to_serializer = OFF;
+	bool Add_string_to_serializer = OFF;
+	bool Get_string_from_serializer = OFF;
+	bool ByteArray_getAsString = OFF;
+	bool Append_ByteArray_to_ByteArray = OFF;
+	bool Add_c_str_to_serializer = OFF;
+	bool Load_data_from_file_using_SimpleIO = OFF;
 }
 
 using namespace ::srl;
@@ -39,12 +41,26 @@ Performance_fixture::~Performance_fixture()
 
 void Performance_fixture::SetUp()
 {
-
+	if (ALL_TC_ENABLED)
+		enableAllTCs();
 }
 
 void Performance_fixture::TearDown()
 {
 	Tools::cleanUpTestFilesAndDirectories();
+}
+
+void Performance_fixture::enableAllTCs()
+{
+	ByteArray_resize_zero_to_value = ON;
+	Add_new_double_to_serializer_three_bytes_more_needed = ON;
+	Add_ByteArray_to_serializer = ON;
+	Add_string_to_serializer = ON;
+	Get_string_from_serializer = ON;
+	ByteArray_getAsString = ON;
+	Append_ByteArray_to_ByteArray = ON;
+	Add_c_str_to_serializer = ON;
+	Load_data_from_file_using_SimpleIO = ON;
 }
 
 TEST_F(Performance_fixture, ByteArray_resize_zero_to_value)

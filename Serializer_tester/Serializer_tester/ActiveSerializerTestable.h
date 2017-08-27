@@ -19,7 +19,7 @@ public:
 	virtual void clear() override;
 	virtual unsigned int size() const override;
 	virtual bool isEmpty() const override;
-	virtual operator bool() override;
+	virtual operator bool() const override;
 
 	virtual const ByteArray & getData() const override;
 

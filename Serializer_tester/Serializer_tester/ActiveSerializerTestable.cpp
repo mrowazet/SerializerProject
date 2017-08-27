@@ -37,7 +37,7 @@ bool ActiveSerializerTestable::isEmpty() const
 	return false;
 }
 
-ActiveSerializerTestable::operator bool()
+ActiveSerializerTestable::operator bool() const
 {
 	return false;
 }

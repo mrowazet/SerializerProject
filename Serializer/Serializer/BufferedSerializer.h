@@ -24,7 +24,7 @@ public:
 
 	virtual void clear() override;
 	virtual bool isEmpty() const override;
-	virtual operator bool() override;
+	virtual operator bool() const override;
 
 	virtual const ByteArray & getData() const override;
 

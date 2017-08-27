@@ -22,12 +22,12 @@ BufferedSerializer::BufferedSerializer(const Path & dir,
 BufferedSerializer::BufferedSerializer(BufferedSerializer && serializer)
 	:MAX_BUFFER_SIZE(serializer.MAX_BUFFER_SIZE)
 {
-	//TODO
+	//TODO add move semantic for constructor
 }
 
 BufferedSerializer & BufferedSerializer::operator=(BufferedSerializer && serializer)
 {
-	//TODO
+	//TODO add move semantic for assignment operator
 	return *this;
 }
 
@@ -83,7 +83,7 @@ bool BufferedSerializer::isEmpty() const
 	return false;
 }
 
-BufferedSerializer::operator bool()
+BufferedSerializer::operator bool() const
 {
 	return false;
 }
