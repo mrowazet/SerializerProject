@@ -66,12 +66,6 @@
     <ClCompile Include="CyclicBuffer_fixture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Michal\Documents\Visual Studio 2017\Projects\SerializerProject\Serializer_tester\Serializer_tester\..\..\lib\native\src\gtest\gtest-all.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Users\Michal\Documents\Visual Studio 2017\Projects\SerializerProject\Serializer_tester\Serializer_tester\..\..\lib\native\src\gmock\gmock-all.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serializer_fixture.h">

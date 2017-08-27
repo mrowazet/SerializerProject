@@ -1,1 +1,0 @@
-Before start you need to open Serialize_tester project and install NuGet package: gmock
