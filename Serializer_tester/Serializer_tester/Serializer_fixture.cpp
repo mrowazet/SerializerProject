@@ -141,7 +141,7 @@ TEST_F(Serializer_fixture, IsEmpty)
 	serializer.clear();
 	EXPECT_TRUE(serializer.isEmpty());
 }
-/* //TODO
+/* //TODO does not work with new version of gtest! investigate
 TEST_F(Serializer_fixture, boolOperator)
 {
 	Serializer serializer;
