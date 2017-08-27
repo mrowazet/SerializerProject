@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Serializer_tester", "Serializer_tester\Serializer_tester.vcxproj", "{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}.Debug|x64.ActiveCfg = Debug|x64
+		{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}.Debug|x64.Build.0 = Debug|x64
+		{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}.Debug|x86.ActiveCfg = Debug|Win32
+		{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}.Debug|x86.Build.0 = Debug|Win32
+		{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}.Release|x64.ActiveCfg = Release|x64
+		{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}.Release|x64.Build.0 = Release|x64
+		{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}.Release|x86.ActiveCfg = Release|Win32
+		{2EF1500E-8D04-4BE5-A0AE-24C2381B896A}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
