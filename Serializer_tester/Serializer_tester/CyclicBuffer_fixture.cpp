@@ -3,25 +3,13 @@
 using namespace testing;
 using namespace srl;
 
-class CyclicBufferTestable : public srl::CyclicBuffer
-{
-public:
-	CyclicBufferTestable(const unsigned int & bufferSize = SERIALIZER_BUFFER_MIN)
-		:CyclicBuffer(bufferSize),
-		 internalData(m_data)
-	{
-
-	}
-
-	ByteArray& internalData;
-};
-
 CyclicBuffer_fixture::CyclicBuffer_fixture()
 {
 }
 
 CyclicBuffer_fixture::~CyclicBuffer_fixture()
 {
+
 }
 
 void CyclicBuffer_fixture::SetUp()

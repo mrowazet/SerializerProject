@@ -1,18 +1,16 @@
 #pragma once
-#include "Constants.h"
-#include "Byte.h"
-#include "ByteArray.h"
+#include "ICyclicBuffer.h"
 #include <vector>
 #include <memory>
 
 namespace srl
 {
 
-class CyclicBuffer
+class CyclicBuffer : public ICyclicBuffer
 {
 public:
 	explicit CyclicBuffer(const unsigned int & bufferSize = SERIALIZER_BUFFER_MIN);
-	~CyclicBuffer();
+	virtual ~CyclicBuffer();
 
 	CyclicBuffer(const CyclicBuffer & sourceBuffer);
 	CyclicBuffer(CyclicBuffer && sourceBuffer);
@@ -20,12 +18,12 @@ public:
 	CyclicBuffer & operator=(const CyclicBuffer & sourceBuffer);
 	CyclicBuffer & operator=(CyclicBuffer && sourceBuffer);
 
-	unsigned int size() const;
-	bool isEmpty() const;
-	operator bool() const;
-	void clear();
+	virtual unsigned int size() const override;
+	virtual bool isEmpty() const override;
+	virtual operator bool() const override;
+	virtual void clear() override;
 
-	inline const auto & data() const { return m_data[0]; }
+	virtual const srl::Byte_8 & data() const override;
 
 protected:
 	const unsigned int BUFFER_SIZE;

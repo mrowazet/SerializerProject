@@ -8,7 +8,7 @@ namespace fs = std::experimental::filesystem;
 BufferedSerializer::BufferedSerializer(const unsigned int & maxBufferSize)
 	:MAX_BUFFER_SIZE(validateProvidedBufferSize(maxBufferSize))
 {
-
+	m_buffer = std::make_unique<CyclicBuffer>(MAX_BUFFER_SIZE);
 }
 
 BufferedSerializer::BufferedSerializer(const Path & dir,
@@ -64,12 +64,12 @@ unsigned int BufferedSerializer::getMaxBufferSize() const
 
 unsigned int BufferedSerializer::getBufferSize() const
 {
-	return m_buffer.size();
+	return m_buffer->size();
 }
 
 void BufferedSerializer::clearBuffer()
 {
-	m_buffer.clear();
+	m_buffer->clear();
 }
 
 void BufferedSerializer::clear()

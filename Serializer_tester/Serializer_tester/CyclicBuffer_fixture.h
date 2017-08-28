@@ -1,9 +1,9 @@
 #pragma once
-#include <gtest\gtest.h>
+#include <gmock\gmock.h>
 #include "Constants.h"
 #include "Utils.h"
 
-#include "CyclicBuffer.h"
+#include "CyclicBufferTestable.h"
 
 class CyclicBuffer_fixture : public testing::Test
 {

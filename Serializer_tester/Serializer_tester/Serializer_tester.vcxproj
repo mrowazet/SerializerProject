@@ -125,9 +125,11 @@
   <ItemGroup>
     <ClCompile Include="ActiveSerializerTestable.cpp" />
     <ClCompile Include="ActiveSerializer_fixture.cpp" />
+    <ClCompile Include="BufferedSerializerTestable.cpp" />
     <ClCompile Include="BufferedSerializer_fixture.cpp" />
     <ClCompile Include="ByteArray_fixture.cpp" />
     <ClCompile Include="Byte_fixture.cpp" />
+    <ClCompile Include="CyclicBufferTestable.cpp" />
     <ClCompile Include="CyclicBuffer_fixture.cpp" />
     <ClCompile Include="FileHandlerBase_fixture.cpp" />
     <ClCompile Include="FlyFileHandler_fixture.cpp" />
@@ -144,9 +146,12 @@
   <ItemGroup>
     <ClInclude Include="ActiveSerializerTestable.h" />
     <ClInclude Include="ActiveSerializer_fixture.h" />
+    <ClInclude Include="BufferedSerializerTestable.h" />
     <ClInclude Include="BufferedSerializer_fixture.h" />
     <ClInclude Include="ByteArray_fixture.h" />
     <ClInclude Include="Byte_fixture.h" />
+    <ClInclude Include="CyclicBufferMock.h" />
+    <ClInclude Include="CyclicBufferTestable.h" />
     <ClInclude Include="CyclicBuffer_fixture.h" />
     <ClInclude Include="FileHandlerBase_fixture.h" />
     <ClInclude Include="FlyFileHandler_fixture.h" />

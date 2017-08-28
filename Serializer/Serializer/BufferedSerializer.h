@@ -1,5 +1,7 @@
 #pragma once
 #include "ActiveSerializer.h"
+#include "CyclicBuffer.h"
+#include <memory>
 
 namespace srl
 {
@@ -11,7 +13,7 @@ public:
 	BufferedSerializer(const Path & dir,
 					   const IOMode & mode = IOMode::Truncate,
 					   const unsigned int & maxBufferSize = SERIALIZER_BUFFER_MIN);
-	~BufferedSerializer();
+	virtual ~BufferedSerializer();
 
 	BufferedSerializer(BufferedSerializer && serializer);
 	BufferedSerializer & operator=(BufferedSerializer && serializer);
@@ -55,11 +57,11 @@ public:
 	//getBufferReadIndex
 	//open after open situation
 
-private:
+protected:
 	const unsigned int MAX_BUFFER_SIZE;
 	unsigned int validateProvidedBufferSize(const unsigned int & maxBufferSize);
 
-	ByteArray m_buffer;
+	std::unique_ptr<ICyclicBuffer> m_buffer;
 };
 
 } //end of namespace

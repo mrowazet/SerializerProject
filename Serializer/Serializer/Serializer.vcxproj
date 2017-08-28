@@ -140,6 +140,7 @@
     <ClInclude Include="FileHandlerBase.h" />
     <ClInclude Include="FlyFileHandler.h" />
     <ClInclude Include="FlySerializer.h" />
+    <ClInclude Include="ICyclicBuffer.h" />
     <ClInclude Include="IFileHandler.h" />
     <ClInclude Include="ISerializable.h" />
     <ClInclude Include="ISerializer.h" />

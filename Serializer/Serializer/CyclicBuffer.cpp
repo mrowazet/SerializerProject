@@ -57,4 +57,9 @@ void CyclicBuffer::clear()
 	//TODO
 }
 
+const srl::Byte_8 & CyclicBuffer::data() const
+{
+	return m_data[0];
+}
+
 } //end of namespace

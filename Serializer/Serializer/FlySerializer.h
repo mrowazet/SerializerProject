@@ -8,7 +8,7 @@ class FlySerializer : public ISerializer
 {
 public:
 	FlySerializer();
-	~FlySerializer();
+	virtual ~FlySerializer();
 
 	FlySerializer(FlySerializer && serializer);
 	FlySerializer & operator=(FlySerializer && serializer);

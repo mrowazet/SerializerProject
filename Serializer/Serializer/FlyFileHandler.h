@@ -8,7 +8,7 @@ class FlyFileHandler : public FileHandlerBase
 {
 public:
 	FlyFileHandler();
-	~FlyFileHandler();
+	virtual ~FlyFileHandler();
 };
 
 } //end of namespace

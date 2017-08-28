@@ -2,7 +2,7 @@
 #include <gtest\gtest.h>
 #include "Constants.h"
 #include "Utils.h"
-#include "BufferedSerializer.h"
+#include "BufferedSerializerTestable.h"
 
 class BufferedSerializer_fixture : public testing::Test
 {

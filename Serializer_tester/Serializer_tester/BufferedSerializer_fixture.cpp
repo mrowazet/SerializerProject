@@ -21,6 +21,11 @@ void BufferedSerializer_fixture::TearDown()
 	ut::cleanUpTestFilesAndDirectories();
 }
 
+TEST_F(BufferedSerializer_fixture, CyclicBufferMock_can_be_instantiate)
+{
+	CyclicBufferMock cyclicBufferMock;
+}
+
 TEST_F(BufferedSerializer_fixture, default_consturtor_set_buffer_size_to_minimum)
 {
 	BufferedSerializer serializer;
@@ -75,14 +80,11 @@ TEST_F(BufferedSerializer_fixture, buffer_size_equal_to_file_size_when_file_size
 
 TEST_F(BufferedSerializer_fixture, clearBuffer_clears_internal_buffer)
 {
-	ut::createDefaultOutput();
+	BufferedSerializerTestable serializer;
 
-	BufferedSerializer serializer(DEFAULT_DIRECTORY, IOMode::Append);
-	ASSERT_TRUE(serializer.isFileOpened());
-	ASSERT_GT(serializer.getBufferSize(), 0); //TODO
-
-	serializer.clearBuffer();
-	EXPECT_EQ(0, serializer.getBufferSize()); //TODO
+	auto& bufferMock = serializer.getCyclicBufferMock();
+	EXPECT_CALL(bufferMock, clear()).Times(1);
+	serializer.clear();
 }
 
 TEST_F(BufferedSerializer_fixture, clear_clears_buffer)

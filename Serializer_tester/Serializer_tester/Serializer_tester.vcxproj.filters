@@ -13,114 +13,150 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Suits">
+      <UniqueIdentifier>{ba3b1ec2-4a39-4fbf-9b0d-b1d95ded8352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mocks">
+      <UniqueIdentifier>{37ea1b44-9061-41e5-9871-05b17d9d98c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Testables">
+      <UniqueIdentifier>{5e337f4b-805a-4bd6-83a0-3bdfe2d98486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tools">
+      <UniqueIdentifier>{631754ae-535d-4c52-aefc-c94b7d039800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tools">
+      <UniqueIdentifier>{5d2a0dfe-4a44-4b88-beaf-c46bc9407621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Suits">
+      <UniqueIdentifier>{abc8271a-fab0-47f7-b379-6133298bfc6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Testables">
+      <UniqueIdentifier>{9136a7ff-c2ee-4e73-8cbe-29dfc6be7733}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="maincpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Serializer_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Byte_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ByteArray_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Stopwatch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Performance_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SerializableTestClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SimpleIO_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FlySerializer_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileHandlerBase_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FlyFileHandler_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferedSerializer_fixture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ActiveSerializer_fixture.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Suits</Filter>
     </ClCompile>
     <ClCompile Include="ActiveSerializerTestable.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Testables</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferedSerializer_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="Byte_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="ByteArray_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
     </ClCompile>
     <ClCompile Include="CyclicBuffer_fixture.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="FileHandlerBase_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyFileHandler_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="FlySerializer_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="Performance_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializableTestClass.cpp">
+      <Filter>Source Files\Testables</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleIO_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
+    </ClCompile>
+    <ClCompile Include="Stopwatch.cpp">
+      <Filter>Source Files\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities_fixture.cpp">
+      <Filter>Source Files\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="CyclicBufferTestable.cpp">
+      <Filter>Source Files\Testables</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferedSerializerTestable.cpp">
+      <Filter>Source Files\Testables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Serializer_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Byte_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ByteArray_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Stopwatch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Performance_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializableTestClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SerializableMock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SimpleIO_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FlySerializer_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TestConstants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FileHandlerBase_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FlyFileHandler_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utilities_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferedSerializer_fixture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ActiveSerializer_fixture.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Suits</Filter>
     </ClInclude>
     <ClInclude Include="ActiveSerializerTestable.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Testables</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferedSerializer_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="Byte_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteArray_fixture.h">
+      <Filter>Header Files\Suits</Filter>
     </ClInclude>
     <ClInclude Include="CyclicBuffer_fixture.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="FileHandlerBase_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyFileHandler_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="FlySerializer_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="Performance_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializableMock.h">
+      <Filter>Header Files\Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializableTestClass.h">
+      <Filter>Header Files\Testables</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleIO_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities_fixture.h">
+      <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="Stopwatch.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="TestConstants.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="CyclicBufferMock.h">
+      <Filter>Header Files\Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="CyclicBufferTestable.h">
+      <Filter>Header Files\Testables</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferedSerializerTestable.h">
+      <Filter>Header Files\Testables</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
