@@ -9,9 +9,10 @@ class BufferedSerializerTestable : public BufferedSerializer
 {
 public:
 	BufferedSerializerTestable(const unsigned int & maxBufferSize = SERIALIZER_BUFFER_MIN);
-	~BufferedSerializerTestable();
+	virtual ~BufferedSerializerTestable();
 
 	CyclicBufferMock & getCyclicBufferMock();
+	void clearmo() { m_buffer.reset(); };
 
 };
 

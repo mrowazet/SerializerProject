@@ -77,16 +77,17 @@ TEST_F(BufferedSerializer_fixture, buffer_size_equal_to_file_size_when_file_size
 
 	EXPECT_EQ(FileSize, serializer.getBufferSize());
 }
-
+*/
 TEST_F(BufferedSerializer_fixture, clearBuffer_clears_internal_buffer)
 {
 	BufferedSerializerTestable serializer;
+	auto& mock = serializer.getCyclicBufferMock();
 
-	auto& bufferMock = serializer.getCyclicBufferMock();
-	EXPECT_CALL(bufferMock, clear()).Times(1);
-	serializer.clear();
+	EXPECT_CALL(mock, clear());
+	serializer.clearBuffer();
 }
-
+/*
+//TODO clear from ActiveSerializer::clearBase(); is unsafe! correct that and write test!
 TEST_F(BufferedSerializer_fixture, clear_clears_buffer)
 {
 	ut::createDefaultOutput();

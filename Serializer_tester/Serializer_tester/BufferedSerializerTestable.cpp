@@ -7,7 +7,7 @@ namespace srl
 BufferedSerializerTestable::BufferedSerializerTestable(const unsigned int & maxBufferSize)
 	: BufferedSerializer(maxBufferSize)
 {
-	m_buffer = std::make_unique<CyclicBufferMock>();
+	m_buffer = std::make_unique<testing::StrictMock<CyclicBufferMock>>();
 }
 
 BufferedSerializerTestable::~BufferedSerializerTestable()
