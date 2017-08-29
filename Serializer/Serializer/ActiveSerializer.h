@@ -6,7 +6,7 @@
 namespace srl
 {
 
-class ActiveSerializer : public ISerializer, public FileHandlerBase
+class ActiveSerializer : public ISerializer, protected FileHandlerBase
 {
 public:
 	ActiveSerializer();

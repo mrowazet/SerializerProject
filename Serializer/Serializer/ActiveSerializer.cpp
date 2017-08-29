@@ -75,10 +75,12 @@ void ActiveSerializer::closeFileBase()
 
 void ActiveSerializer::clearBase()
 {
-	m_file->close();
-	m_file.reset();
-
-	m_file = openFileForReadAndWrite(m_filePath);
+	if (m_file)
+	{
+		m_file->close();
+		m_file.reset();
+		m_file = openFileForReadAndWrite(m_filePath);
+	}
 }
 
 void ActiveSerializer::clearFileName()

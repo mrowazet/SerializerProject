@@ -86,20 +86,30 @@ TEST_F(BufferedSerializer_fixture, clearBuffer_clears_internal_buffer)
 	EXPECT_CALL(mock, clear());
 	serializer.clearBuffer();
 }
-/*
-//TODO clear from ActiveSerializer::clearBase(); is unsafe! correct that and write test!
+
 TEST_F(BufferedSerializer_fixture, clear_clears_buffer)
 {
 	ut::createDefaultOutput();
 
-	BufferedSerializer serializer(DEFAULT_DIRECTORY, IOMode::Append);
-	ASSERT_TRUE(serializer.isFileOpened());
-	ASSERT_GT(serializer.getBufferSize(), 0); //TODO
+	BufferedSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY);
 
+	ASSERT_TRUE(serializer.isFileOpened());
+
+	auto& mock = serializer.getCyclicBufferMock();
+	EXPECT_CALL(mock, clear());
 	serializer.clear();
-	EXPECT_EQ(0, serializer.getBufferSize());
 }
-*/
+
+TEST_F(BufferedSerializer_fixture, clear_does_not_call_clearBuffer_if_file_not_opened)
+{
+	BufferedSerializerTestable serializer;
+	ASSERT_FALSE(serializer.isFileOpened());
+
+	auto& mock = serializer.getCyclicBufferMock();
+	EXPECT_CALL(mock, clear()).Times(0);
+	serializer.clear();
+}
 
 /*
 add internal indexes and do not forget to clear them with clear()!

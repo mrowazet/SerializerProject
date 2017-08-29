@@ -53,7 +53,7 @@ TEST_F(CyclicBuffer_fixture, isEmpty_returns_false_if_any_bit_is_1)
 
 	EXPECT_FALSE(buffer.isEmpty());
 }
-
+/*
 TEST_F(CyclicBuffer_fixture, isEmpty_returns_true_if_all_bits_are_0)
 {
 	CyclicBuffer buffer;
@@ -84,3 +84,4 @@ TEST_F(CyclicBuffer_fixture, clear_erase_all_data_in_internal_buffer)
 	buffer.clear();
 	EXPECT_TRUE(buffer.isEmpty());
 }
+*/

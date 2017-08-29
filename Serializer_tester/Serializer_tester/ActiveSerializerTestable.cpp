@@ -17,6 +17,7 @@ bool ActiveSerializerTestable::openFile(const Path & dir, const IOMode & mode)
 {
 	return ActiveSerializer::openFileBase(dir, mode);
 }
+
 void ActiveSerializerTestable::closeFile()
 {
 	ActiveSerializer::closeFileBase();

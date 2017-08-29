@@ -244,3 +244,9 @@ TEST_F(ActiveSerializer_fixture, ActiveSerializer_can_be_moved_by_assignment_ope
 	EXPECT_EQ("", serializer.getFilePath());
 	EXPECT_THROW(serializer.getFileSize(), std::exception);
 }
+
+TEST_F(ActiveSerializer_fixture, clear_is_safe_when_no_file_opened)
+{
+	ActiveSerializerTestable serializer;
+	EXPECT_NO_THROW(serializer.clear());
+}

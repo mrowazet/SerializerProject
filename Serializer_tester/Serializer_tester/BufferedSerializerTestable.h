@@ -12,8 +12,6 @@ public:
 	virtual ~BufferedSerializerTestable();
 
 	CyclicBufferMock & getCyclicBufferMock();
-	void clearmo() { m_buffer.reset(); };
-
 };
 
 } //end of namespace

@@ -74,8 +74,11 @@ void BufferedSerializer::clearBuffer()
 
 void BufferedSerializer::clear()
 {
-	ActiveSerializer::clearBase();
-	clearBuffer();
+	if(m_file)
+	{
+		ActiveSerializer::clearBase();
+		clearBuffer();
+	}
 }
 
 bool BufferedSerializer::isEmpty() const
