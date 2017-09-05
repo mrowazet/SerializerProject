@@ -81,9 +81,9 @@ TEST_F(BufferedSerializer_fixture, buffer_size_equal_to_file_size_when_file_size
 TEST_F(BufferedSerializer_fixture, clearBuffer_clears_internal_buffer)
 {
 	BufferedSerializerTestable serializer;
-	auto& mock = serializer.getCyclicBufferMock();
+	auto& bufferMock = serializer.getCyclicBufferMock();
 
-	EXPECT_CALL(mock, clear());
+	EXPECT_CALL(bufferMock, clear());
 	serializer.clearBuffer();
 }
 
@@ -96,8 +96,8 @@ TEST_F(BufferedSerializer_fixture, clear_clears_buffer)
 
 	ASSERT_TRUE(serializer.isFileOpened());
 
-	auto& mock = serializer.getCyclicBufferMock();
-	EXPECT_CALL(mock, clear());
+	auto& bufferMock = serializer.getCyclicBufferMock();
+	EXPECT_CALL(bufferMock, clear());
 	serializer.clear();
 }
 
@@ -106,8 +106,8 @@ TEST_F(BufferedSerializer_fixture, clear_does_not_call_clearBuffer_if_file_not_o
 	BufferedSerializerTestable serializer;
 	ASSERT_FALSE(serializer.isFileOpened());
 
-	auto& mock = serializer.getCyclicBufferMock();
-	EXPECT_CALL(mock, clear()).Times(0);
+	auto& bufferMock = serializer.getCyclicBufferMock();
+	EXPECT_CALL(bufferMock, clear()).Times(0);
 	serializer.clear();
 }
 

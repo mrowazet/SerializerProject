@@ -37,6 +37,43 @@ TEST_F(CyclicBuffer_fixture, default_constructor_set_buffer_size_for_min)
 	EXPECT_EQ(SERIALIZER_BUFFER_MIN, buffer.size());
 }
 
+TEST_F(CyclicBuffer_fixture, can_be_constructed_with_move_semantic)
+{
+	CyclicBuffer sourceBuffer(SERIALIZER_BUFFER_MAX);
+	CyclicBuffer destinationBuffer(std::move(sourceBuffer));
+
+	EXPECT_EQ(SERIALIZER_BUFFER_MAX, destinationBuffer.size());
+}
+
+TEST_F(CyclicBuffer_fixture, source_buffer_should_be_empty_and_resized_after_move)
+{
+	CyclicBuffer sourceBuffer(SERIALIZER_BUFFER_MAX);
+	//TODO add data to source buffer
+	CyclicBuffer destinationBuffer(std::move(sourceBuffer));
+
+	EXPECT_EQ(SERIALIZER_BUFFER_MAX, sourceBuffer.size());
+	EXPECT_TRUE(sourceBuffer.isEmpty());
+}
+
+TEST_F(CyclicBuffer_fixture, can_be_correctly_constructed_with_copy_constructor)
+{
+	//TODO
+}
+
+TEST_F(CyclicBuffer_fixture, can_be_correctly_assigned_by_copy)
+{
+	//TODO
+}
+
+TEST_F(CyclicBuffer_fixture, can_be_assign_with_move_semantic)
+{
+	CyclicBuffer sourceBuffer(SERIALIZER_BUFFER_MIN);
+	CyclicBuffer destinationBuffer(SERIALIZER_BUFFER_MAX);
+
+	destinationBuffer = std::move(sourceBuffer);
+	EXPECT_EQ(SERIALIZER_BUFFER_MIN, destinationBuffer.size());
+}
+
 TEST_F(CyclicBuffer_fixture, getData_returns_correct_address)
 {
 	CyclicBufferTestable buffer(SERIALIZER_BUFFER_MIN);
@@ -53,15 +90,14 @@ TEST_F(CyclicBuffer_fixture, isEmpty_returns_false_if_any_bit_is_1)
 
 	EXPECT_FALSE(buffer.isEmpty());
 }
-/*
+
 TEST_F(CyclicBuffer_fixture, isEmpty_returns_true_if_all_bits_are_0)
 {
 	CyclicBuffer buffer;
-
 	EXPECT_TRUE(buffer.isEmpty());
 }
 
-TEST_F(CyclicBuffer_fixture, boolOperator_returns_same_value_as_isEmpty)
+TEST_F(CyclicBuffer_fixture, boolOperator_returns_same_values_as_isEmpty)
 {
 	CyclicBufferTestable buffer;
 
@@ -84,4 +120,63 @@ TEST_F(CyclicBuffer_fixture, clear_erase_all_data_in_internal_buffer)
 	buffer.clear();
 	EXPECT_TRUE(buffer.isEmpty());
 }
-*/
+
+TEST_F(CyclicBuffer_fixture, clear_reset_m_position)
+{
+	CyclicBufferTestable buffer;
+	buffer.m_index = 3;
+
+	buffer.clear();
+
+	auto expectedPosition = 0;
+	EXPECT_EQ(expectedPosition, buffer.m_index);
+}
+
+TEST_F(CyclicBuffer_fixture, internal_buffer_is_the_same_size_after_clear)
+{
+	CyclicBuffer buffer(SERIALIZER_BUFFER_MIN);
+
+	buffer.clear();
+	EXPECT_EQ(SERIALIZER_BUFFER_MIN, buffer.size());
+}
+
+TEST_F(CyclicBuffer_fixture, write_byte_stores_data_in_internal_buffer)
+{
+	Byte_8 byte("11111111");
+	CyclicBufferTestable buffer;
+	buffer.write(byte);
+
+	EXPECT_EQ(byte, buffer.internalData[0]);
+}
+
+TEST_F(CyclicBuffer_fixture, write_byte_increment_position_by_1)
+{
+	Byte_8 byte("11111111");
+	CyclicBufferTestable buffer;
+	buffer.write(byte);
+
+	auto expectedPosition = 1u;
+	EXPECT_EQ(expectedPosition, buffer.m_index);
+}
+
+TEST_F(CyclicBuffer_fixture, read_byte_returns_last_stored_byte)
+{
+	Byte_8 byte("11111111");
+	CyclicBufferTestable buffer;
+	buffer.write(byte);
+
+	auto loadedByte = buffer.read();
+	EXPECT_EQ(byte, loadedByte);
+}
+
+TEST_F(CyclicBuffer_fixture, read_byte_decrement_position_by_1)
+{
+	Byte_8 byte("11111111");
+	CyclicBufferTestable buffer;
+	buffer.write(byte);
+
+	buffer.read();
+
+	auto expectedPosition = 0u;
+	EXPECT_EQ(expectedPosition, buffer.m_index);
+}
