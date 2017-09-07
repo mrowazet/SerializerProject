@@ -62,6 +62,9 @@ protected:
 	unsigned int validateProvidedBufferSize(const unsigned int & maxBufferSize);
 
 	std::unique_ptr<IBuffer> m_buffer;
+
+	using ActiveSerializer::openFileForRead;
+	using ActiveSerializer::openFileForWrite;
 };
 
 } //end of namespace

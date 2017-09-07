@@ -25,31 +25,31 @@ void Buffer_fixture::TearDown()
 TEST_F(Buffer_fixture, consturctor_set_bufferSize)
 {
 	auto SIZE = 22u;
-	Buffer buffer(SIZE);
+	BufferTestable buffer(SIZE);
 
 	EXPECT_EQ(SIZE, buffer.size());
 }
 
 TEST_F(Buffer_fixture, default_constructor_set_buffer_size_for_min)
 {
-	Buffer buffer;
+	BufferTestable buffer;
 
 	EXPECT_EQ(SERIALIZER_BUFFER_MIN, buffer.size());
 }
 
 TEST_F(Buffer_fixture, can_be_constructed_with_move_semantic)
 {
-	Buffer sourceBuffer(SERIALIZER_BUFFER_MAX);
-	Buffer destinationBuffer(std::move(sourceBuffer));
+	BufferTestable sourceBuffer(SERIALIZER_BUFFER_MAX);
+	BufferTestable destinationBuffer(std::move(sourceBuffer));
 
 	EXPECT_EQ(SERIALIZER_BUFFER_MAX, destinationBuffer.size());
 }
 
 TEST_F(Buffer_fixture, source_buffer_should_be_empty_and_resized_after_move)
 {
-	Buffer sourceBuffer(SERIALIZER_BUFFER_MAX);
+	BufferTestable sourceBuffer(SERIALIZER_BUFFER_MAX);
 	//TODO add data to source buffer
-	Buffer destinationBuffer(std::move(sourceBuffer));
+	BufferTestable destinationBuffer(std::move(sourceBuffer));
 
 	EXPECT_EQ(SERIALIZER_BUFFER_MAX, sourceBuffer.size());
 	EXPECT_TRUE(sourceBuffer.isEmpty());
@@ -67,8 +67,8 @@ TEST_F(Buffer_fixture, can_be_correctly_assigned_by_copy)
 
 TEST_F(Buffer_fixture, can_be_assign_with_move_semantic)
 {
-	Buffer sourceBuffer(SERIALIZER_BUFFER_MIN);
-	Buffer destinationBuffer(SERIALIZER_BUFFER_MAX);
+	BufferTestable sourceBuffer(SERIALIZER_BUFFER_MIN);
+	BufferTestable destinationBuffer(SERIALIZER_BUFFER_MAX);
 
 	destinationBuffer = std::move(sourceBuffer);
 	EXPECT_EQ(SERIALIZER_BUFFER_MIN, destinationBuffer.size());
@@ -93,7 +93,7 @@ TEST_F(Buffer_fixture, isEmpty_returns_false_if_any_bit_is_1)
 
 TEST_F(Buffer_fixture, isEmpty_returns_true_if_all_bits_are_0)
 {
-	Buffer buffer;
+	BufferTestable buffer;
 	EXPECT_TRUE(buffer.isEmpty());
 }
 
@@ -134,7 +134,7 @@ TEST_F(Buffer_fixture, clear_reset_m_position)
 
 TEST_F(Buffer_fixture, internal_buffer_is_the_same_size_after_clear)
 {
-	Buffer buffer(SERIALIZER_BUFFER_MIN);
+	BufferTestable buffer(SERIALIZER_BUFFER_MIN);
 
 	buffer.clear();
 	EXPECT_EQ(SERIALIZER_BUFFER_MIN, buffer.size());

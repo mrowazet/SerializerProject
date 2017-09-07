@@ -8,7 +8,7 @@ namespace fs = std::experimental::filesystem;
 BufferedSerializer::BufferedSerializer(const unsigned int & maxBufferSize)
 	:MAX_BUFFER_SIZE(validateProvidedBufferSize(maxBufferSize))
 {
-	m_buffer = std::make_unique<Buffer>(MAX_BUFFER_SIZE);
+	m_buffer.reset(new Buffer(MAX_BUFFER_SIZE));
 }
 
 BufferedSerializer::BufferedSerializer(const Path & dir,

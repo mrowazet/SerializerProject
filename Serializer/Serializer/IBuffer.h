@@ -6,6 +6,7 @@
 namespace srl
 {
 
+/*This class is facade for ByteArray to simplify interface*/
 class IBuffer
 {
 public:

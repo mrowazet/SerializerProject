@@ -8,8 +8,13 @@ namespace srl
 
 class Buffer : public IBuffer
 {
-public:
+protected:
+	friend class BufferedSerializer;
+	friend class BufferTestable;
+
 	explicit Buffer(const unsigned int & bufferSize = SERIALIZER_BUFFER_MIN);
+
+public:
 	virtual ~Buffer();
 
 	Buffer(const Buffer & sourceBuffer);
