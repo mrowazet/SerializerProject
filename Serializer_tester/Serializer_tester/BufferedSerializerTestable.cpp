@@ -7,7 +7,7 @@ namespace srl
 BufferedSerializerTestable::BufferedSerializerTestable(const unsigned int & maxBufferSize)
 	: BufferedSerializer(maxBufferSize)
 {
-	m_buffer = std::make_unique<testing::StrictMock<CyclicBufferMock>>();
+	m_buffer = std::make_unique<testing::StrictMock<BufferMock>>();
 }
 
 BufferedSerializerTestable::~BufferedSerializerTestable()
@@ -15,9 +15,9 @@ BufferedSerializerTestable::~BufferedSerializerTestable()
 
 }
 
-CyclicBufferMock & BufferedSerializerTestable::getCyclicBufferMock()
+BufferMock & BufferedSerializerTestable::getCyclicBufferMock()
 {
-	return dynamic_cast<CyclicBufferMock&>(*m_buffer);
+	return dynamic_cast<BufferMock&>(*m_buffer);
 }
 
 } //end of namespace

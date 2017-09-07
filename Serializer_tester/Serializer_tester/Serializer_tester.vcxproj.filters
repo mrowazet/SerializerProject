@@ -54,9 +54,6 @@
     <ClCompile Include="ByteArray_fixture.cpp">
       <Filter>Source Files\Suits</Filter>
     </ClCompile>
-    <ClCompile Include="CyclicBuffer_fixture.cpp">
-      <Filter>Source Files\Suits</Filter>
-    </ClCompile>
     <ClCompile Include="FileHandlerBase_fixture.cpp">
       <Filter>Source Files\Suits</Filter>
     </ClCompile>
@@ -87,11 +84,14 @@
     <ClCompile Include="Utils.cpp">
       <Filter>Source Files\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="CyclicBufferTestable.cpp">
-      <Filter>Source Files\Testables</Filter>
-    </ClCompile>
     <ClCompile Include="BufferedSerializerTestable.cpp">
       <Filter>Source Files\Testables</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferTestable.cpp">
+      <Filter>Source Files\Testables</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer_fixture.cpp">
+      <Filter>Source Files\Suits</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,9 +108,6 @@
       <Filter>Header Files\Suits</Filter>
     </ClInclude>
     <ClInclude Include="ByteArray_fixture.h">
-      <Filter>Header Files\Suits</Filter>
-    </ClInclude>
-    <ClInclude Include="CyclicBuffer_fixture.h">
       <Filter>Header Files\Suits</Filter>
     </ClInclude>
     <ClInclude Include="FileHandlerBase_fixture.h">
@@ -149,14 +146,17 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="CyclicBufferMock.h">
-      <Filter>Header Files\Mocks</Filter>
-    </ClInclude>
-    <ClInclude Include="CyclicBufferTestable.h">
-      <Filter>Header Files\Testables</Filter>
-    </ClInclude>
     <ClInclude Include="BufferedSerializerTestable.h">
       <Filter>Header Files\Testables</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferTestable.h">
+      <Filter>Header Files\Testables</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferMock.h">
+      <Filter>Header Files\Mocks</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer_fixture.h">
+      <Filter>Header Files\Suits</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

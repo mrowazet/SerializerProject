@@ -6,17 +6,17 @@
 namespace srl
 {
 
-class ICyclicBuffer
+class IBuffer
 {
 public:
-	ICyclicBuffer() = default;
-	virtual ~ICyclicBuffer() = default;
+	IBuffer() = default;
+	virtual ~IBuffer() = default;
 
-	ICyclicBuffer(const ICyclicBuffer&) = default;
-	ICyclicBuffer(ICyclicBuffer&&) = default;
+	IBuffer(const IBuffer&) = default;
+	IBuffer(IBuffer&&) = default;
 
-	ICyclicBuffer& operator=(const ICyclicBuffer&) = default;
-	ICyclicBuffer& operator=(ICyclicBuffer&&) = default;
+	IBuffer& operator=(const IBuffer&) = default;
+	IBuffer& operator=(IBuffer&&) = default;
 
 	virtual unsigned int size() const = 0;
 	virtual bool isEmpty() const = 0;

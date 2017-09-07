@@ -1,22 +1,22 @@
 #pragma once
-#include "ICyclicBuffer.h"
+#include "IBuffer.h"
 #include <vector>
 #include <memory>
 
 namespace srl
 {
 
-class CyclicBuffer : public ICyclicBuffer
+class Buffer : public IBuffer
 {
 public:
-	explicit CyclicBuffer(const unsigned int & bufferSize = SERIALIZER_BUFFER_MIN);
-	virtual ~CyclicBuffer();
+	explicit Buffer(const unsigned int & bufferSize = SERIALIZER_BUFFER_MIN);
+	virtual ~Buffer();
 
-	CyclicBuffer(const CyclicBuffer & sourceBuffer);
-	CyclicBuffer(CyclicBuffer && sourceBuffer);
+	Buffer(const Buffer & sourceBuffer);
+	Buffer(Buffer && sourceBuffer);
 
-	CyclicBuffer & operator=(const CyclicBuffer & sourceBuffer);
-	CyclicBuffer & operator=(CyclicBuffer && sourceBuffer);
+	Buffer & operator=(const Buffer & sourceBuffer);
+	Buffer & operator=(Buffer && sourceBuffer);
 
 	virtual unsigned int size() const override;
 	virtual bool isEmpty() const override;
@@ -34,8 +34,8 @@ public:
 protected:
 	unsigned int BUFFER_SIZE; //TODO should be removed?
 
-	void moveBufferContent(CyclicBuffer && sourceBuffer);
-	void copyBufferContent(const CyclicBuffer & sourceBuffer);
+	void moveBufferContent(Buffer && sourceBuffer);
+	void copyBufferContent(const Buffer & sourceBuffer);
 
 	void fitInternalBuffer();
 	

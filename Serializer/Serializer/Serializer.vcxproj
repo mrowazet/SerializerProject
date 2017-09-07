@@ -136,11 +136,11 @@
     <ClInclude Include="Byte.h" />
     <ClInclude Include="ByteArray.h" />
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="CyclicBuffer.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="FileHandlerBase.h" />
     <ClInclude Include="FlyFileHandler.h" />
     <ClInclude Include="FlySerializer.h" />
-    <ClInclude Include="ICyclicBuffer.h" />
+    <ClInclude Include="IBuffer.h" />
     <ClInclude Include="IFileHandler.h" />
     <ClInclude Include="ISerializable.h" />
     <ClInclude Include="ISerializer.h" />
@@ -154,7 +154,7 @@
     <ClCompile Include="BufferedSerializer.cpp" />
     <ClCompile Include="Byte.cpp" />
     <ClCompile Include="ByteArray.cpp" />
-    <ClCompile Include="CyclicBuffer.cpp" />
+    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="FileHandlerBase.cpp" />
     <ClCompile Include="FlyFileHandler.cpp" />
     <ClCompile Include="FlySerializer.cpp" />

@@ -3,13 +3,13 @@
 #include "Constants.h"
 #include "Utils.h"
 
-#include "CyclicBufferTestable.h"
+#include "BufferTestable.h"
 
-class CyclicBuffer_fixture : public testing::Test
+class Buffer_fixture : public testing::Test
 {
 public:
-	CyclicBuffer_fixture();
-	~CyclicBuffer_fixture();
+	Buffer_fixture();
+	~Buffer_fixture();
 
 	virtual void SetUp() override;
 	virtual void TearDown() override;

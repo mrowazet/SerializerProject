@@ -1,6 +1,6 @@
 #pragma once
 #include "BufferedSerializer.h"
-#include "CyclicBufferMock.h"
+#include "BufferMock.h"
 
 namespace srl
 {
@@ -11,7 +11,7 @@ public:
 	BufferedSerializerTestable(const unsigned int & maxBufferSize = SERIALIZER_BUFFER_MIN);
 	virtual ~BufferedSerializerTestable();
 
-	CyclicBufferMock & getCyclicBufferMock();
+	BufferMock & getCyclicBufferMock();
 };
 
 } //end of namespace

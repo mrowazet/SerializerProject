@@ -1,6 +1,6 @@
 #pragma once
 #include "ActiveSerializer.h"
-#include "CyclicBuffer.h"
+#include "Buffer.h"
 #include <memory>
 
 namespace srl
@@ -61,7 +61,7 @@ protected:
 	const unsigned int MAX_BUFFER_SIZE;
 	unsigned int validateProvidedBufferSize(const unsigned int & maxBufferSize);
 
-	std::unique_ptr<ICyclicBuffer> m_buffer;
+	std::unique_ptr<IBuffer> m_buffer;
 };
 
 } //end of namespace

@@ -1,10 +1,10 @@
 #pragma once
 #include "gmock\gmock.h"
-#include "ICyclicBuffer.h"
+#include "IBuffer.h"
 
 namespace srl 
 {
-	class CyclicBufferMock : public ICyclicBuffer
+	class BufferMock : public IBuffer
 	{
 	public:
 		MOCK_CONST_METHOD0(size, unsigned int());
