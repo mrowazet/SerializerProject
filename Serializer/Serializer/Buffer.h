@@ -36,6 +36,12 @@ public:
 
 	virtual const srl::Byte_8 & data() const override;
 
+	virtual int getReadIndex() const override;
+	virtual int getWriteIndex() const override;
+
+	virtual void setReadIndex(const int & index) const override;
+	virtual void setWriteIndex(const int & index) override;
+
 protected:
 	unsigned int BUFFER_SIZE; //TODO should be removed?
 
@@ -43,9 +49,11 @@ protected:
 	void copyBufferContent(const Buffer & sourceBuffer);
 
 	void fitInternalBuffer();
+	void clearIndexes();
 	
 	ByteArray m_data;
-	mutable unsigned int m_index = 0;
+	mutable unsigned int m_readIndex = 0;
+	mutable unsigned int m_writeIndex = 0;
 };
 
 } //end of namespace

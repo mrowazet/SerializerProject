@@ -65,6 +65,7 @@ protected:
 
 	using ActiveSerializer::openFileForRead;
 	using ActiveSerializer::openFileForWrite;
+	using ActiveSerializer::openFileForReadAndWrite;
 };
 
 } //end of namespace

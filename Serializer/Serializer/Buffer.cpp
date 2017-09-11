@@ -42,14 +42,17 @@ void Buffer::moveBufferContent(Buffer && sourceBuffer)
 	BUFFER_SIZE = sourceBuffer.BUFFER_SIZE;
 	sourceBuffer.m_data.resize(BUFFER_SIZE);
 
-	m_index = sourceBuffer.m_index;
-	sourceBuffer.m_index = 0;
+	m_readIndex = sourceBuffer.m_readIndex;
+	m_writeIndex = sourceBuffer.m_writeIndex;
+
+	sourceBuffer.clearIndexes();
 }
 
 void Buffer::copyBufferContent(const Buffer & sourceBuffer)
 {
 	m_data = sourceBuffer.m_data;
-	m_index = sourceBuffer.m_index;
+	m_readIndex = sourceBuffer.m_readIndex;
+	m_writeIndex = sourceBuffer.m_writeIndex;
 	BUFFER_SIZE = sourceBuffer.BUFFER_SIZE;
 }
 
@@ -70,26 +73,32 @@ Buffer::operator bool() const
 
 void Buffer::clear() //TODO add perf test for that and check another impls
 {
-	m_index = 0;
+	clearIndexes();
 
 	for (int i = 0; i < m_data.size(); i++)
 		m_data[i].clear();
 }
 
-void Buffer::write(const Byte_8 & byte) //TODO what if current index is eq max size, add TC
+void Buffer::clearIndexes()
 {
-	m_data[m_index] = byte;
-	m_index++;
+	m_readIndex = 0;
+	m_writeIndex = 0;
+}
+
+void Buffer::write(const Byte_8 & byte) 
+{
+	m_data[m_writeIndex] = byte;
+	m_writeIndex++;
 }
 
 void Buffer::write(const ByteArray & byteArray) //TODO
 {
 }
 
-Byte_8 Buffer::read() const //TODO what if current index is 0, add TCs
+Byte_8 Buffer::read() const
 {
-	m_index--;
-	return m_data[m_index];
+	m_readIndex--;
+	return m_data[m_readIndex];
 }
 
 ByteArray Buffer::read(const int & size) const //TODO
@@ -100,6 +109,26 @@ ByteArray Buffer::read(const int & size) const //TODO
 const srl::Byte_8 & Buffer::data() const
 {
 	return m_data[0];
+}
+
+int Buffer::getReadIndex() const
+{
+	return m_readIndex;
+}
+
+int Buffer::getWriteIndex() const
+{
+	return m_writeIndex;
+}
+
+void Buffer::setReadIndex(const int & index) const
+{
+	m_readIndex = index;
+}
+
+void Buffer::setWriteIndex(const int & index)
+{
+	m_writeIndex = index;
 }
 
 void Buffer::fitInternalBuffer()

@@ -40,7 +40,8 @@ public:
 		return *this;
 	}
 
-	using Buffer::m_index;
+	using Buffer::m_readIndex;
+	using Buffer::m_writeIndex;
 	ByteArray& internalData;
 };
 

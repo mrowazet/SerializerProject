@@ -22,7 +22,7 @@ void BufferedSerializer_fixture::TearDown()
 
 TEST_F(BufferedSerializer_fixture, BufferMock_can_be_instantiate)
 {
-	BufferMock cyclicBufferMock;
+	BufferMock bufferMock;
 }
 
 TEST_F(BufferedSerializer_fixture, default_consturtor_set_buffer_size_to_minimum)

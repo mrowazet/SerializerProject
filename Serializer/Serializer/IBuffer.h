@@ -6,7 +6,7 @@
 namespace srl
 {
 
-/*This class is facade for ByteArray to simplify interface*/
+/*This class is facade for ByteArray but with additional features*/
 class IBuffer
 {
 public:
@@ -29,6 +29,12 @@ public:
 
 	virtual Byte_8 read() const = 0;
 	virtual ByteArray read(const int& size) const = 0;
+
+	virtual int getReadIndex() const = 0;
+	virtual int getWriteIndex() const = 0;
+
+	virtual void setReadIndex(const int & index) const = 0;
+	virtual void setWriteIndex(const int & index) = 0;
 
 	virtual const srl::Byte_8 & data() const = 0;
 

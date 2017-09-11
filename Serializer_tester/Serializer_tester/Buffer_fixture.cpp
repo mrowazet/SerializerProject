@@ -48,7 +48,9 @@ TEST_F(Buffer_fixture, can_be_constructed_with_move_semantic)
 TEST_F(Buffer_fixture, source_buffer_should_be_empty_and_resized_after_move)
 {
 	BufferTestable sourceBuffer(SERIALIZER_BUFFER_MAX);
-	//TODO add data to source buffer
+	Byte_8 byte("11111111");
+	sourceBuffer.internalData[0] = byte;
+
 	BufferTestable destinationBuffer(std::move(sourceBuffer));
 
 	EXPECT_EQ(SERIALIZER_BUFFER_MAX, sourceBuffer.size());
@@ -57,12 +59,30 @@ TEST_F(Buffer_fixture, source_buffer_should_be_empty_and_resized_after_move)
 
 TEST_F(Buffer_fixture, can_be_correctly_constructed_with_copy_constructor)
 {
-	//TODO
+	BufferTestable orginalBuffer(SERIALIZER_BUFFER_MIN);
+	Byte_8 byte("11111111");
+	orginalBuffer.internalData[1] = byte;
+
+	BufferTestable copiedBuffer(orginalBuffer);
+
+	EXPECT_EQ(orginalBuffer.size(), copiedBuffer.size());
+	EXPECT_EQ(orginalBuffer.isEmpty(), copiedBuffer.isEmpty());
+	EXPECT_EQ(orginalBuffer.internalData, copiedBuffer.internalData);
 }
 
 TEST_F(Buffer_fixture, can_be_correctly_assigned_by_copy)
 {
-	//TODO
+	BufferTestable orginalBuffer(SERIALIZER_BUFFER_MIN);
+	Byte_8 byte("11111111");
+	orginalBuffer.internalData[1] = byte;
+
+	BufferTestable copiedBuffer(SERIALIZER_BUFFER_MAX);
+	copiedBuffer.internalData[0] = byte;
+	copiedBuffer = orginalBuffer;
+
+	EXPECT_EQ(orginalBuffer.size(), copiedBuffer.size());
+	EXPECT_EQ(orginalBuffer.isEmpty(), copiedBuffer.isEmpty());
+	EXPECT_EQ(orginalBuffer.internalData, copiedBuffer.internalData);
 }
 
 TEST_F(Buffer_fixture, can_be_assign_with_move_semantic)
@@ -121,15 +141,17 @@ TEST_F(Buffer_fixture, clear_erase_all_data_in_internal_buffer)
 	EXPECT_TRUE(buffer.isEmpty());
 }
 
-TEST_F(Buffer_fixture, clear_reset_m_position)
+TEST_F(Buffer_fixture, clear_reset_read_and_write_indexes)
 {
 	BufferTestable buffer;
-	buffer.m_index = 3;
+	buffer.m_readIndex = 3;
+	buffer.m_writeIndex = 6;
 
 	buffer.clear();
 
 	auto expectedPosition = 0;
-	EXPECT_EQ(expectedPosition, buffer.m_index);
+	EXPECT_EQ(expectedPosition, buffer.m_readIndex);
+	EXPECT_EQ(expectedPosition, buffer.m_writeIndex);
 }
 
 TEST_F(Buffer_fixture, internal_buffer_is_the_same_size_after_clear)
@@ -149,14 +171,16 @@ TEST_F(Buffer_fixture, write_byte_stores_data_in_internal_buffer)
 	EXPECT_EQ(byte, buffer.internalData[0]);
 }
 
-TEST_F(Buffer_fixture, write_byte_increment_position_by_1)
+TEST_F(Buffer_fixture, write_byte_increment_write_indexes_by_1)
 {
 	Byte_8 byte("11111111");
 	BufferTestable buffer;
 	buffer.write(byte);
 
-	auto expectedPosition = 1u;
-	EXPECT_EQ(expectedPosition, buffer.m_index);
+	auto expectedWritePosition = 1u;
+	auto expectedReadPosition = 0u;
+	EXPECT_EQ(expectedWritePosition, buffer.m_writeIndex);
+	EXPECT_EQ(expectedReadPosition, buffer.m_readIndex);
 }
 
 TEST_F(Buffer_fixture, read_byte_returns_last_stored_byte)
@@ -164,6 +188,7 @@ TEST_F(Buffer_fixture, read_byte_returns_last_stored_byte)
 	Byte_8 byte("11111111");
 	BufferTestable buffer;
 	buffer.write(byte);
+	buffer.m_readIndex = 1;
 
 	auto loadedByte = buffer.read();
 	EXPECT_EQ(byte, loadedByte);
@@ -174,9 +199,30 @@ TEST_F(Buffer_fixture, read_byte_decrement_position_by_1)
 	Byte_8 byte("11111111");
 	BufferTestable buffer;
 	buffer.write(byte);
+	buffer.m_readIndex = 1;
 
 	buffer.read();
 
-	auto expectedPosition = 0u;
-	EXPECT_EQ(expectedPosition, buffer.m_index);
+	auto expectedWritePosition = 1u;
+	auto expectedReadPosition = 0u;
+	EXPECT_EQ(expectedWritePosition, buffer.m_writeIndex);
+	EXPECT_EQ(expectedReadPosition, buffer.m_readIndex);
+}
+
+TEST_F(Buffer_fixture, get_set_read_index)
+{
+	BufferTestable buffer;
+	auto index = 8;
+
+	buffer.setReadIndex(index);
+	EXPECT_EQ(index, buffer.getReadIndex());
+}
+
+TEST_F(Buffer_fixture, get_set_write_index)
+{
+	BufferTestable buffer;
+	auto index = 8;
+
+	buffer.setWriteIndex(index);
+	EXPECT_EQ(index, buffer.getWriteIndex());
 }
