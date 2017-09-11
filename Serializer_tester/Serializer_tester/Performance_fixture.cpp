@@ -5,6 +5,7 @@
 #include "ByteArray.h"
 #include "Serializer.h"
 #include "SimpleIO.h"
+#include "BufferTestable.h"
 
 using namespace Utils;
 
@@ -25,6 +26,7 @@ namespace
 	bool Append_ByteArray_to_ByteArray = OFF;
 	bool Add_c_str_to_serializer = OFF;
 	bool Load_data_from_file_using_SimpleIO = OFF;
+	bool Clear_data_in_buffer = OFF;
 }
 
 using namespace ::srl;
@@ -61,6 +63,7 @@ void Performance_fixture::enableAllTCs()
 	Append_ByteArray_to_ByteArray = ON;
 	Add_c_str_to_serializer = ON;
 	Load_data_from_file_using_SimpleIO = ON;
+	Clear_data_in_buffer = ON;
 }
 
 TEST_F(Performance_fixture, ByteArray_resize_zero_to_value)
@@ -353,6 +356,29 @@ TEST_F(Performance_fixture, Load_data_from_file_using_SimpleIO)
 	auto time = m_stopwatch.getLastElapsedTime();
 	double elapsed = (double)time / Loops;
 	std::cout << "Size of string used to test: " << TestString.size() << "\n";
+	std::cout << "Test done. Loops: " << Loops << " Average time per loop: " << elapsed << "ms \n\n";
+}
+
+TEST_F(Performance_fixture, Clear_data_in_buffer)
+{
+	if (!Clear_data_in_buffer)
+		return;
+
+	const unsigned int Loops = 30000;
+
+	//Test
+	m_stopwatch.start();
+	BufferTestable buffer(SERIALIZER_BUFFER_MAX);
+
+	for (int i = 0; i < Loops; ++i)
+	{
+		buffer.clear();
+	}
+
+	m_stopwatch.stop();
+
+	auto time = m_stopwatch.getLastElapsedTime();
+	double elapsed = (double)time / Loops;
 	std::cout << "Test done. Loops: " << Loops << " Average time per loop: " << elapsed << "ms \n\n";
 }
 

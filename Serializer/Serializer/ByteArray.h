@@ -27,6 +27,8 @@ class ByteArray
 
 		ByteArray slice(const unsigned int & headIndex, const unsigned int & tailIndex) const;
 
+		void fillWithZeroes();
+
 		Byte_8 getByte(const unsigned int & index) const;
 		bool setByte(const Byte_8 & byte, const unsigned int & index);
 

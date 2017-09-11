@@ -71,12 +71,10 @@ Buffer::operator bool() const
 	return isEmpty();
 }
 
-void Buffer::clear() //TODO add perf test for that and check another impls
+void Buffer::clear()
 {
+	m_data.fillWithZeroes();
 	clearIndexes();
-
-	for (int i = 0; i < m_data.size(); i++)
-		m_data[i].clear();
 }
 
 void Buffer::clearIndexes()

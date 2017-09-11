@@ -136,6 +136,11 @@ ByteArray ByteArray::slice(const unsigned int & headIndex, const unsigned int & 
 		return bufferSlice(tailIndex, headIndex);
 }
 
+void ByteArray::fillWithZeroes()
+{
+	std::fill(m_data.begin(), m_data.end(), 0);
+}
+
 ByteArray ByteArray::bufferSlice(const unsigned int & headIndex, const unsigned int & tailIndex) const
 {
 	const int NeededSize = tailIndex - headIndex + 1; // +1 because array should contain indicated indexes

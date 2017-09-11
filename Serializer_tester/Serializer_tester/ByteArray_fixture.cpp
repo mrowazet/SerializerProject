@@ -832,3 +832,18 @@ TEST_F(ByteArray_fixture, Move_assignment_operator)
 	EXPECT_EQ(ZERO_BYTES, firstArray.size());
 	EXPECT_TRUE(firstArray.isEmpty());
 }
+
+TEST_F(ByteArray_fixture, fillWithZeroes_clears_content_but_not_size)
+{
+	Byte_8 byte("10101010");
+	ByteArray byteArray;
+
+	byteArray << byte << byte << byte << byte;
+
+	ASSERT_FALSE(byteArray.isZeroed());
+	auto expectedSize = byteArray.size();
+
+	byteArray.fillWithZeroes();
+	EXPECT_TRUE(byteArray.isZeroed());
+	EXPECT_EQ(expectedSize, byteArray.size());
+}
