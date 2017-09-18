@@ -9,7 +9,7 @@ namespace srl
 class Byte_8
 {
 	public:
-		static constexpr int NR_OF_BITS = 8;
+		static constexpr int BITS_IN_BYTE = 8;
 
 		Byte_8();
 		Byte_8(const std::string & byteAsString);

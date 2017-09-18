@@ -22,6 +22,25 @@ void Buffer_fixture::TearDown()
 
 }
 
+srl::ByteArray Buffer_fixture::makeByteArray()
+{
+	auto sizeInBytes = 16u;
+	ByteArray byteArray(sizeInBytes);
+	Byte_8 byte("01010101");
+
+	for (int i = 0; i < EIGHT_BYTES; i++)
+		byteArray.setByte(byte, i);
+				
+	const std::string expectedFirstEightBytes = "0101010101010101010101010101010101010101010101010101010101010101";
+
+	auto arrayAsString = byteArray.getAsString();
+	arrayAsString.resize(EIGHT_BYTES * Byte_8::BITS_IN_BYTE);
+
+	EXPECT_EQ(expectedFirstEightBytes, arrayAsString);
+
+	return byteArray;
+}
+
 TEST_F(Buffer_fixture, consturctor_set_bufferSize)
 {
 	auto SIZE = 22u;
@@ -225,4 +244,17 @@ TEST_F(Buffer_fixture, get_set_write_index)
 
 	buffer.setWriteIndex(index);
 	EXPECT_EQ(index, buffer.getWriteIndex());
+}
+
+TEST_F(Buffer_fixture, data_can_be_write_to_buffer)
+{
+	const auto byteArray = makeByteArray();
+	BufferTestable buffer(SERIALIZER_BUFFER_MIN);
+
+	ASSERT_TRUE(buffer.isEmpty());
+	auto expectedWriteIndex = buffer.getWriteIndex() + byteArray.size();
+
+	buffer.write(byteArray);
+	EXPECT_EQ(byteArray.getAsString(), buffer.internalData.getAsString());
+	EXPECT_EQ(expectedWriteIndex, buffer.getWriteIndex());
 }

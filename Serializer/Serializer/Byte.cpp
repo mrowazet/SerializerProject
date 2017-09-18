@@ -42,16 +42,16 @@ Byte_8::Byte_8(const std::string & byteAsString)
 {
 	clear();
 
-	if (byteAsString.size() == NR_OF_BITS && isContentCorrect(byteAsString))
+	if (byteAsString.size() == BITS_IN_BYTE && isContentCorrect(byteAsString))
 		parseByteFromString(byteAsString);
 }
 
 Byte_8::Byte_8(const char * byteAsCharArray)
 {
 	clear();
-	std::string content(byteAsCharArray, NR_OF_BITS);
+	std::string content(byteAsCharArray, BITS_IN_BYTE);
 
-	if (content.size() == NR_OF_BITS && isContentCorrect(content))
+	if (content.size() == BITS_IN_BYTE && isContentCorrect(content))
 		parseByteFromString(content);
 }
 
@@ -67,7 +67,7 @@ Byte_8::~Byte_8()
 
 bool Byte_8::isContentCorrect(const std::string & byteAsString) const
 {
-	for (int i = 0; i < NR_OF_BITS - 1; i++)
+	for (int i = 0; i < BITS_IN_BYTE - 1; i++)
 	{
 		if (byteAsString[i] != '0' && byteAsString[i] != '1')
 			return false;		
@@ -90,7 +90,7 @@ void Byte_8::parseByteFromString(const std::string & byteAsString)
 
 std::string Byte_8::getAsString() const
 {
-	std::string bits(Byte_8::NR_OF_BITS, '0');
+	std::string bits(Byte_8::BITS_IN_BYTE, '0');
 
 	bit7 ? bits[0] = '1' : bits[0] = '0';
 	bit6 ? bits[1] = '1' : bits[1] = '0';
@@ -107,7 +107,7 @@ std::string Byte_8::getAsString() const
 std::vector<bool> Byte_8::getAsBoolVector() const
 {
 	std::vector<bool> bits;
-	bits.resize(NR_OF_BITS);
+	bits.resize(BITS_IN_BYTE);
 
 	bit0 ? bits[0] = true : bits[0] = false;
 	bit1 ? bits[1] = true : bits[1] = false;
@@ -124,7 +124,7 @@ std::vector<bool> Byte_8::getAsBoolVector() const
 std::vector<int> Byte_8::getAsIntVector() const
 {
 	std::vector<int> bits;
-	bits.resize(NR_OF_BITS);
+	bits.resize(BITS_IN_BYTE);
 
 	bit0 ? bits[0] = 1 : bits[0] = 0;
 	bit1 ? bits[1] = 1 : bits[1] = 0;
@@ -140,7 +140,7 @@ std::vector<int> Byte_8::getAsIntVector() const
 
 bool Byte_8::getBit(const int & index) const
 {
-	if (index > NR_OF_BITS - 1 || index < 0)
+	if (index > BITS_IN_BYTE - 1 || index < 0)
 	{
 		return false;
 	}
@@ -157,7 +157,7 @@ bool Byte_8::getBit(const int & index) const
 
 bool Byte_8::setBit(const int & index, const bool & isActive)
 {
-	if (index > NR_OF_BITS - 1 || index < 0)
+	if (index > BITS_IN_BYTE - 1 || index < 0)
 	{
 		return false ;
 	}
@@ -203,7 +203,7 @@ bool Byte_8::operator==(const Byte_8 & byte) const
 
 bool Byte_8::operator==(const std::string & byteAsString) const
 {
-	if (byteAsString.size() == NR_OF_BITS && isContentCorrect(byteAsString))
+	if (byteAsString.size() == BITS_IN_BYTE && isContentCorrect(byteAsString))
 	{
 		Byte_8 byte(byteAsString);
 		return *this == byte;
@@ -218,7 +218,7 @@ bool Byte_8::operator==(const char * byteAsCharArray) const
 {
 	std::string content(byteAsCharArray);
 
-	if (content.size() == NR_OF_BITS && isContentCorrect(content))
+	if (content.size() == BITS_IN_BYTE && isContentCorrect(content))
 	{
 		Byte_8 byte(content);
 		return *this == byte;
@@ -236,7 +236,7 @@ bool Byte_8::operator!=(const Byte_8 & byte) const
 
 bool Byte_8::operator!=(const std::string & byteAsString) const
 {
-	if (byteAsString.size() == NR_OF_BITS && isContentCorrect(byteAsString))
+	if (byteAsString.size() == BITS_IN_BYTE && isContentCorrect(byteAsString))
 	{
 		Byte_8 byte(byteAsString);
 		return *this != byte;
@@ -251,7 +251,7 @@ bool Byte_8::operator!=(const char * byteAsCharArray) const
 {
 	std::string content(byteAsCharArray);
 
-	if (content.size() == NR_OF_BITS && isContentCorrect(content))
+	if (content.size() == BITS_IN_BYTE && isContentCorrect(content))
 	{
 		Byte_8 byte(content);
 		return *this != byte;

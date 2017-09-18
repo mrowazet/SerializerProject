@@ -26,7 +26,7 @@ ByteArray::~ByteArray()
 
 std::string ByteArray::getAsString() const
 {
-	static const int BITS = Byte_8::NR_OF_BITS;
+	static const int BITS = Byte_8::BITS_IN_BYTE;
 	const int BufferSize = m_data.size();
 
 	std::string output;

@@ -89,8 +89,11 @@ void Buffer::write(const Byte_8 & byte)
 	m_writeIndex++;
 }
 
-void Buffer::write(const ByteArray & byteArray) //TODO
+void Buffer::write(const ByteArray & byteArray)
 {
+	auto dataSize = byteArray.size();
+	std::memcpy(&m_data[m_writeIndex], &byteArray[0], dataSize);
+	m_writeIndex += dataSize;
 }
 
 Byte_8 Buffer::read() const

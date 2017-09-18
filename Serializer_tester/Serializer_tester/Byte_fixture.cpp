@@ -111,13 +111,13 @@ TEST_F(Byte_fixture, Get_single_bit)
 {
 	Byte_8 byte;
 
-	for (int i = 0; i < Byte_8::NR_OF_BITS; i++)
+	for (int i = 0; i < Byte_8::BITS_IN_BYTE; i++)
 		EXPECT_EQ(false, byte.getBit(i));
 
-	for (int i = 0; i < Byte_8::NR_OF_BITS; i++)
+	for (int i = 0; i < Byte_8::BITS_IN_BYTE; i++)
 		byte.setBit(i, true);
 
-	for (int i = 0; i < Byte_8::NR_OF_BITS; i++)
+	for (int i = 0; i < Byte_8::BITS_IN_BYTE; i++)
 		EXPECT_EQ(true, byte.getBit(i));
 }
 
@@ -153,13 +153,13 @@ TEST_F(Byte_fixture, Get_as_bool_vector)
 	Byte_8 byte;
 	auto boolVector = byte.getAsBoolVector();
 
-	for (int i = 0; i < Byte_8::NR_OF_BITS; i++)
+	for (int i = 0; i < Byte_8::BITS_IN_BYTE; i++)
 		EXPECT_EQ(false, boolVector[i]);
 
 	byte.setBit(BIT_2, true);
 	boolVector = byte.getAsBoolVector();
 	
-	for (int i = 0; i < Byte_8::NR_OF_BITS; i++)
+	for (int i = 0; i < Byte_8::BITS_IN_BYTE; i++)
 	{ 
 		if (i != BIT_2)
 			EXPECT_EQ(false, boolVector[i]);
@@ -173,13 +173,13 @@ TEST_F(Byte_fixture, Get_as_int_vector)
 	Byte_8 byte;
 	auto intVector = byte.getAsIntVector();
 
-	for (int i = 0; i < Byte_8::NR_OF_BITS; i++)
+	for (int i = 0; i < Byte_8::BITS_IN_BYTE; i++)
 		EXPECT_EQ(0, intVector[i]);
 
 	byte.setBit(BIT_2, true);
 	intVector = byte.getAsIntVector();
 
-	for (int i = 0; i < Byte_8::NR_OF_BITS; i++)
+	for (int i = 0; i < Byte_8::BITS_IN_BYTE; i++)
 	{
 		if (i != BIT_2)
 			EXPECT_EQ(0, intVector[i]);

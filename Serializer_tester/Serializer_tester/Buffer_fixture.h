@@ -13,5 +13,7 @@ public:
 
 	virtual void SetUp() override;
 	virtual void TearDown() override;
+
+	srl::ByteArray makeByteArray();
 };
 
