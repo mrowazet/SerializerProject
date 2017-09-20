@@ -847,3 +847,85 @@ TEST_F(ByteArray_fixture, fillWithZeroes_clears_content_but_not_size)
 	EXPECT_TRUE(byteArray.isZeroed());
 	EXPECT_EQ(expectedSize, byteArray.size());
 }
+
+TEST_F(ByteArray_fixture, iteratorCanBeUsed)
+{
+	Byte_8 byte1("00001111");
+	Byte_8 byte2("11000011");
+	Byte_8 byte3("00111100");
+	Byte_8 byte4("11110000");
+
+	ByteArray byteArray;
+	byteArray << byte1 << byte2 << byte3 << byte4;
+	
+	auto iter = byteArray.begin();
+
+	EXPECT_EQ(byte1, *iter);
+
+	iter++;
+	EXPECT_EQ(byte2, *iter);
+
+	iter++;
+	EXPECT_EQ(byte3, *iter);
+
+	iter++;
+	EXPECT_EQ(byte4, *iter);
+
+	iter++;
+	EXPECT_EQ(iter, byteArray.end());
+}
+
+TEST_F(ByteArray_fixture, dataCanByChangeViaIterator)
+{
+	Byte_8 byte("00001111");
+
+	auto size = 2u;
+	ByteArray byteArray(size);
+
+	auto iter = byteArray.begin();
+
+	*iter = byte;
+	iter++;
+	*iter = byte;
+
+	EXPECT_EQ("0000111100001111", byteArray.getAsString());
+}
+
+TEST_F(ByteArray_fixture, dataCanBeReadByConstIterator)
+{
+	Byte_8 byte1("00001111");
+	Byte_8 byte2("11000011");
+
+	ByteArray byteArray;
+	byteArray << byte1 << byte2;
+
+	auto cIter = byteArray.cbegin();
+
+	EXPECT_EQ(*cIter, byte1);
+
+	cIter++;
+	EXPECT_EQ(*cIter, byte2);
+}
+
+TEST_F(ByteArray_fixture, forLoopCanBeUsed)
+{
+	Byte_8 byte1("11000011");
+	Byte_8 byte2("00111100");
+
+	ByteArray byteArray;
+	byteArray << byte1 << byte2 << byte1 << byte2;
+
+	std::string arrayAsString;
+
+	for (auto& byte : byteArray)
+		arrayAsString += byte.getAsString();
+
+	EXPECT_EQ("11000011001111001100001100111100", byteArray.getAsString());
+
+	arrayAsString.clear();
+
+	for (const auto& byte : byteArray)
+		arrayAsString += byte.getAsString();
+
+	EXPECT_EQ("11000011001111001100001100111100", byteArray.getAsString());
+}

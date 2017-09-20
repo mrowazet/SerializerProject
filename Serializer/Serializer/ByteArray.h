@@ -9,6 +9,9 @@ namespace srl
 class ByteArray
 {
 	public:
+		using Iter = std::vector<Byte_8>::iterator;
+		using CIter = std::vector<Byte_8>::const_iterator;
+
 		ByteArray(const unsigned int & sizeInBytes = 0);
 		ByteArray(const ByteArray & byteArray);
 		ByteArray(ByteArray && byteArray);
@@ -48,6 +51,14 @@ class ByteArray
 
 		bool operator==(const ByteArray & byteArray) const;
 		bool operator!=(const ByteArray & byteArray) const;
+
+		Iter begin();
+		CIter begin() const;
+		CIter cbegin() const;
+
+		Iter end();
+		CIter end() const;
+		CIter cend() const;
 
 	private:
 		std::vector<Byte_8> m_data;

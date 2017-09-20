@@ -268,6 +268,36 @@ const Byte_8 & ByteArray::operator[](const int & index) const
 	return m_data[index];
 }
 
+ByteArray::Iter ByteArray::begin()
+{
+	return m_data.begin();
+}
+
+ByteArray::CIter ByteArray::begin() const
+{
+	return cbegin();
+}
+
+ByteArray::Iter ByteArray::end()
+{
+	return m_data.end();
+}
+
+ByteArray::CIter ByteArray::end() const
+{
+	return cend();
+}
+
+ByteArray::CIter ByteArray::cbegin() const
+{
+	return m_data.cbegin();
+}
+
+ByteArray::CIter ByteArray::cend() const
+{
+	return m_data.cend();
+}
+
 } //end of namespace
 
 srl::ByteArray operator+(const srl::Byte_8 & byte, const srl::ByteArray & byteArray)
