@@ -4,7 +4,7 @@ namespace srl
 {
 
 Buffer::Buffer(const unsigned int & bufferSize)
-	:BUFFER_SIZE(bufferSize)
+	:m_bufferSize(bufferSize)
 {
 	fitInternalBuffer();
 }
@@ -39,8 +39,8 @@ void Buffer::moveBufferContent(Buffer && sourceBuffer)
 {
 	m_data = std::move(sourceBuffer.m_data);
 
-	BUFFER_SIZE = sourceBuffer.BUFFER_SIZE;
-	sourceBuffer.m_data.resize(BUFFER_SIZE);
+	m_bufferSize = sourceBuffer.m_bufferSize;
+	sourceBuffer.m_data.resize(m_bufferSize);
 
 	m_readIndex = sourceBuffer.m_readIndex;
 	m_writeIndex = sourceBuffer.m_writeIndex;
@@ -53,7 +53,7 @@ void Buffer::copyBufferContent(const Buffer & sourceBuffer)
 	m_data = sourceBuffer.m_data;
 	m_readIndex = sourceBuffer.m_readIndex;
 	m_writeIndex = sourceBuffer.m_writeIndex;
-	BUFFER_SIZE = sourceBuffer.BUFFER_SIZE;
+	m_bufferSize = sourceBuffer.m_bufferSize;
 }
 
 unsigned int Buffer::size() const
@@ -141,7 +141,7 @@ void Buffer::setWriteIndex(const int & index)
 
 void Buffer::fitInternalBuffer()
 {
-	m_data.resize(BUFFER_SIZE);
+	m_data.resize(m_bufferSize);
 }
 
 } //end of namespace

@@ -43,7 +43,7 @@ public:
 	virtual void setWriteIndex(const int & index) override;
 
 protected:
-	unsigned int BUFFER_SIZE; //TODO should be removed?
+	unsigned int m_bufferSize;
 
 	void moveBufferContent(Buffer && sourceBuffer);
 	void copyBufferContent(const Buffer & sourceBuffer);
