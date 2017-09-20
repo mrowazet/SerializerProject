@@ -848,7 +848,7 @@ TEST_F(ByteArray_fixture, fillWithZeroes_clears_content_but_not_size)
 	EXPECT_EQ(expectedSize, byteArray.size());
 }
 
-TEST_F(ByteArray_fixture, iteratorCanBeUsed)
+TEST_F(ByteArray_fixture, iterator_can_be_used)
 {
 	Byte_8 byte1("00001111");
 	Byte_8 byte2("11000011");
@@ -875,7 +875,7 @@ TEST_F(ByteArray_fixture, iteratorCanBeUsed)
 	EXPECT_EQ(iter, byteArray.end());
 }
 
-TEST_F(ByteArray_fixture, dataCanByChangeViaIterator)
+TEST_F(ByteArray_fixture, data_can_be_chage_via_iterator)
 {
 	Byte_8 byte("00001111");
 
@@ -891,7 +891,7 @@ TEST_F(ByteArray_fixture, dataCanByChangeViaIterator)
 	EXPECT_EQ("0000111100001111", byteArray.getAsString());
 }
 
-TEST_F(ByteArray_fixture, dataCanBeReadByConstIterator)
+TEST_F(ByteArray_fixture, data_can_be_read_by_const_iter)
 {
 	Byte_8 byte1("00001111");
 	Byte_8 byte2("11000011");
@@ -907,7 +907,7 @@ TEST_F(ByteArray_fixture, dataCanBeReadByConstIterator)
 	EXPECT_EQ(*cIter, byte2);
 }
 
-TEST_F(ByteArray_fixture, forLoopCanBeUsed)
+TEST_F(ByteArray_fixture, scoped_for_loop_can_be_used)
 {
 	Byte_8 byte1("11000011");
 	Byte_8 byte2("00111100");

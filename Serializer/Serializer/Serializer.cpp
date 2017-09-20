@@ -146,7 +146,7 @@ Serializer & Serializer::operator<<(const ByteArray & byteArray)
 
 	if (ArraySize > 0)
 	{
-		memcpy(&m_data[m_writeIndex], &byteArray[0], ArraySize);
+		std::copy(byteArray.cbegin(), byteArray.cend(), m_data.begin() + m_writeIndex);
 		m_writeIndex += ArraySize;
 	}
 

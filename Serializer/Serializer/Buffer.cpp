@@ -91,9 +91,8 @@ void Buffer::write(const Byte_8 & byte)
 
 void Buffer::write(const ByteArray & byteArray)
 {
-	auto dataSize = byteArray.size();
-	std::memcpy(&m_data[m_writeIndex], &byteArray[0], dataSize);
-	m_writeIndex += dataSize;
+	std::copy(byteArray.cbegin(), byteArray.cend(), m_data.begin() + m_writeIndex);
+	m_writeIndex += byteArray.size();
 }
 
 Byte_8 Buffer::read() const
@@ -102,9 +101,17 @@ Byte_8 Buffer::read() const
 	return m_data[m_readIndex];
 }
 
-ByteArray Buffer::read(const int & size) const //TODO
+ByteArray Buffer::read(const int & size) const
 {
-	return ByteArray();
+	ByteArray loadedData(size);
+
+	std::copy(m_data.cbegin() + m_readIndex,
+			  m_data.cbegin() + m_readIndex + size,
+			  loadedData.begin());
+
+	m_readIndex += size;
+
+	return std::move(loadedData);
 }
 
 const srl::Byte_8 & Buffer::data() const

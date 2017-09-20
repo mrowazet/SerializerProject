@@ -246,15 +246,64 @@ TEST_F(Buffer_fixture, get_set_write_index)
 	EXPECT_EQ(index, buffer.getWriteIndex());
 }
 
-TEST_F(Buffer_fixture, data_can_be_write_to_buffer)
+TEST_F(Buffer_fixture, data_from_ByteArray_can_be_write_to_empty_buffer)
 {
 	const auto byteArray = makeByteArray();
 	BufferTestable buffer(SERIALIZER_BUFFER_MIN);
 
 	ASSERT_TRUE(buffer.isEmpty());
-	auto expectedWriteIndex = buffer.getWriteIndex() + byteArray.size();
 
 	buffer.write(byteArray);
 	EXPECT_EQ(byteArray.getAsString(), buffer.internalData.getAsString());
+}
+
+TEST_F(Buffer_fixture, write_ByteArray_increment_write_index_by_array_size)
+{
+	const auto byteArray = makeByteArray();
+	BufferTestable buffer(SERIALIZER_BUFFER_MIN);
+
+	auto indexZero = 0u;
+	ASSERT_EQ(indexZero, buffer.getWriteIndex());
+
+	auto expectedWriteIndex = buffer.getWriteIndex() + byteArray.size();
+
+	buffer.write(byteArray);	
 	EXPECT_EQ(expectedWriteIndex, buffer.getWriteIndex());
+}
+
+TEST_F(Buffer_fixture, data_from_ByteArray_can_be_write_to_not_empty_buffer)
+{
+	const auto byteArray = makeByteArray();
+
+	auto doubledMinSize = 2 * SERIALIZER_BUFFER_MIN;
+	BufferTestable buffer(doubledMinSize);
+
+	buffer.write(byteArray);
+	ASSERT_FALSE(buffer.isEmpty());
+
+	auto expectedArray = byteArray + byteArray;
+	buffer.write(byteArray);
+	EXPECT_EQ(expectedArray.getAsString(), buffer.internalData.getAsString());
+}
+
+TEST_F(Buffer_fixture, data_can_be_read_as_ByteArray_from_buffer)
+{
+	const auto byteArray = makeByteArray();
+	BufferTestable buffer(SERIALIZER_BUFFER_MIN);
+
+	buffer.internalData = byteArray;
+
+	auto loadedData = buffer.read(SERIALIZER_BUFFER_MIN);
+
+	EXPECT_EQ(byteArray, loadedData);
+}
+
+TEST_F(Buffer_fixture, read_as_ByteArray_increments_readIndex)
+{
+	BufferTestable buffer(SERIALIZER_BUFFER_MIN);
+
+	buffer.read(SERIALIZER_BUFFER_MIN);
+
+	auto expectedReadIndex = SERIALIZER_BUFFER_MIN;
+	EXPECT_EQ(SERIALIZER_BUFFER_MIN, buffer.getReadIndex());
 }
