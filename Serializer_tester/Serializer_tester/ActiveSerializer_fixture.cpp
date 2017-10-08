@@ -102,6 +102,19 @@ TEST_F(ActiveSerializer_fixture, size_returns_zero_if_file_not_opened)
 	EXPECT_EQ(SIZE_ZERO, FileSize);
 }
 
+TEST_F(ActiveSerializer_fixture, sizer_returns_size_of_the_file_if_opened)
+{
+	ut::createDefaultOutput();
+
+	ActiveSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY, IOMode::Append);
+	ASSERT_TRUE(serializer.isFileOpened());
+
+	auto expectedFileSize = sizeof(int) + PARTIAL_TEST_STRING.size();
+	auto fileSize = serializer.size();
+	EXPECT_EQ(expectedFileSize, fileSize);
+}
+
 TEST_F(ActiveSerializer_fixture, getFileSize_return_size_of_the_opened_file)
 {
 	ut::createDefaultOutput();

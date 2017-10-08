@@ -17,7 +17,9 @@ ActiveSerializer::ActiveSerializer(ActiveSerializer && serializer)
 
 ActiveSerializer & ActiveSerializer::operator=(ActiveSerializer && serializer)
 {
-	moveActiveSerializerContent(std::move(serializer));
+	if(this != &serializer)
+		moveActiveSerializerContent(std::move(serializer));
+
 	return *this;
 }
 
@@ -90,14 +92,7 @@ void ActiveSerializer::clearFileName()
 
 unsigned int ActiveSerializer::size() const
 {
-	if (m_file)
-	{
-		return fs::file_size(m_filePath);
-	}
-	else
-	{
-		return 0;
-	}
+	return m_file ? static_cast<unsigned int>(getFileSize()): 0;
 }
 
 } //end of namespace

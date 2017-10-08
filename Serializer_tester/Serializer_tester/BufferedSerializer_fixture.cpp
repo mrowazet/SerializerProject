@@ -64,7 +64,7 @@ TEST_F(BufferedSerializer_fixture, file_is_not_opened_when_default_constructor_i
 TEST_F(BufferedSerializer_fixture, clearBuffer_clears_internal_buffer)
 {
 	BufferedSerializerTestable serializer;
-	auto& bufferMock = serializer.getCyclicBufferMock();
+	auto& bufferMock = serializer.getBufferMock();
 
 	EXPECT_CALL(bufferMock, clear());
 	serializer.clearBuffer();
@@ -79,7 +79,7 @@ TEST_F(BufferedSerializer_fixture, clear_clears_buffer)
 
 	ASSERT_TRUE(serializer.isFileOpened());
 
-	auto& bufferMock = serializer.getCyclicBufferMock();
+	auto& bufferMock = serializer.getBufferMock();
 	EXPECT_CALL(bufferMock, clear());
 	serializer.clear();
 }
@@ -89,7 +89,18 @@ TEST_F(BufferedSerializer_fixture, clear_does_not_call_clearBuffer_if_file_not_o
 	BufferedSerializerTestable serializer;
 	ASSERT_FALSE(serializer.isFileOpened());
 
-	auto& bufferMock = serializer.getCyclicBufferMock();
+	auto& bufferMock = serializer.getBufferMock();
 	EXPECT_CALL(bufferMock, clear()).Times(0);
 	serializer.clear();
+}
+
+TEST_F(BufferedSerializer_fixture, getData_calls_data_on_buffer)
+{
+	BufferedSerializerTestable serializer;
+	ByteArray internalBuffer;
+
+	auto& bufferMock = serializer.getBufferMock();
+	EXPECT_CALL(bufferMock, data()).WillOnce(ReturnRef(internalBuffer));
+
+	serializer.getData();
 }

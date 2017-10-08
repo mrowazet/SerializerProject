@@ -44,7 +44,7 @@ public:
 
 	//BufferedSerializer specific
 	unsigned int getMaxBufferSize() const;
-	unsigned int getBufferSize() const;
+	unsigned int getBufferSize() const; //TODO probably should be removed
 	void clearBuffer();
 
 	//TODO

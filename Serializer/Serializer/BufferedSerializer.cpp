@@ -93,7 +93,7 @@ BufferedSerializer::operator bool() const
 
 const ByteArray & BufferedSerializer::getData() const
 {
-	return ByteArray();
+	return m_buffer->data();
 }
 
 int BufferedSerializer::getWriteIndex() const

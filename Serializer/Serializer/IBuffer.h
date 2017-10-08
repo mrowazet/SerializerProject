@@ -36,7 +36,7 @@ public:
 	virtual void setReadIndex(const int & index) const = 0;
 	virtual void setWriteIndex(const int & index) = 0;
 
-	virtual const srl::Byte_8 & data() const = 0;
+	virtual const srl::ByteArray & data() const = 0;
 
 	//TODO
 	/* 

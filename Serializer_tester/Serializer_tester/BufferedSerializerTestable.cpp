@@ -15,7 +15,7 @@ BufferedSerializerTestable::~BufferedSerializerTestable()
 
 }
 
-BufferMock & BufferedSerializerTestable::getCyclicBufferMock()
+BufferMock & BufferedSerializerTestable::getBufferMock()
 {
 	return dynamic_cast<BufferMock&>(*m_buffer);
 }

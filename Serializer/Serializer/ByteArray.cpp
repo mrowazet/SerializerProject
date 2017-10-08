@@ -195,13 +195,17 @@ ByteArray ByteArray::operator+(const Byte_8 & byte) const
 
 ByteArray & ByteArray::operator=(const ByteArray & byteArray)
 {
-	m_data = byteArray.m_data;
+	if(this != &byteArray)
+		m_data = byteArray.m_data;
+
 	return *this;
 }
 
 ByteArray & ByteArray::operator=(ByteArray && byteArray)
 {
-	m_data = std::move(byteArray.m_data);
+	if(this != &byteArray)
+		m_data = std::move(byteArray.m_data);
+
 	return *this;
 }
 

@@ -34,7 +34,7 @@ public:
 	virtual Byte_8 read() const override;
 	virtual ByteArray read(const int& size) const override;
 
-	virtual const srl::Byte_8 & data() const override;
+	virtual const srl::ByteArray & data() const override;
 
 	virtual int getReadIndex() const override;
 	virtual int getWriteIndex() const override;

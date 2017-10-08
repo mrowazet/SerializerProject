@@ -11,7 +11,7 @@ public:
 	BufferedSerializerTestable(const unsigned int & maxBufferSize = SERIALIZER_BUFFER_MIN);
 	virtual ~BufferedSerializerTestable();
 
-	BufferMock & getCyclicBufferMock();
+	BufferMock & getBufferMock();
 };
 
 } //end of namespace

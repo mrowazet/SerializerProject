@@ -25,13 +25,17 @@ Buffer::Buffer(Buffer && sourceBuffer)
 
 Buffer & Buffer::operator=(const Buffer & sourceBuffer)
 {	
-	copyBufferContent(sourceBuffer);
+	if(this != &sourceBuffer)
+		copyBufferContent(sourceBuffer);
+
 	return *this;
 }
 
 Buffer & Buffer::operator=(Buffer && sourceBuffer)
 {	
-	moveBufferContent(std::move(sourceBuffer));
+	if(this != &sourceBuffer)
+		moveBufferContent(std::move(sourceBuffer));
+
 	return *this;
 }
 
@@ -114,9 +118,9 @@ ByteArray Buffer::read(const int & size) const
 	return std::move(loadedData);
 }
 
-const srl::Byte_8 & Buffer::data() const
+const srl::ByteArray & Buffer::data() const
 {
-	return m_data[0];
+	return m_data;
 }
 
 int Buffer::getReadIndex() const

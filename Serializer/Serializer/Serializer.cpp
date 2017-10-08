@@ -104,7 +104,9 @@ unsigned int Serializer::bufferSize() const
 
 Serializer & Serializer::operator=(Serializer && serializer)
 {
-	moveSerializerContent(std::move(serializer));
+	if(this != &serializer)
+		moveSerializerContent(std::move(serializer));
+
 	return *this;
 }
 

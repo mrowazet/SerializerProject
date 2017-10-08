@@ -118,7 +118,7 @@ TEST_F(Buffer_fixture, getData_returns_correct_address)
 	BufferTestable buffer(SERIALIZER_BUFFER_MIN);
 
 	auto data = buffer.data();
-	EXPECT_EQ(buffer.internalData[0], data);
+	EXPECT_EQ(buffer.internalData, data);
 }
 
 TEST_F(Buffer_fixture, isEmpty_returns_false_if_any_bit_is_1)
