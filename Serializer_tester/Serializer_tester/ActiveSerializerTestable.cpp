@@ -30,7 +30,7 @@ void ActiveSerializerTestable::clear()
 
 unsigned int ActiveSerializerTestable::size() const
 {
-	return ActiveSerializer::size();
+	return 0;
 }
 
 bool ActiveSerializerTestable::isEmpty() const

@@ -53,6 +53,9 @@ uintmax_t ActiveSerializer::getFileSize() const
 
 bool ActiveSerializer::openFileBase(const Path & dir, const IOMode & mode)
 {
+	if (m_file)
+		return false;
+
 	try
 	{
 		m_file = openFileForReadAndWrite(dir, mode);
@@ -88,11 +91,6 @@ void ActiveSerializer::clearBase()
 void ActiveSerializer::clearFileName()
 {
 	m_filePath.clear();
-}
-
-unsigned int ActiveSerializer::size() const
-{
-	return m_file ? static_cast<unsigned int>(getFileSize()): 0;
 }
 
 } //end of namespace

@@ -25,6 +25,7 @@ public:
 	virtual void closeFile() override;
 
 	virtual void clear() override;
+	virtual unsigned int size() const override;
 	virtual bool isEmpty() const override;
 	virtual operator bool() const override;
 

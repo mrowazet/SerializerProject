@@ -102,19 +102,6 @@ TEST_F(ActiveSerializer_fixture, size_returns_zero_if_file_not_opened)
 	EXPECT_EQ(SIZE_ZERO, FileSize);
 }
 
-TEST_F(ActiveSerializer_fixture, sizer_returns_size_of_the_file_if_opened)
-{
-	ut::createDefaultOutput();
-
-	ActiveSerializerTestable serializer;
-	serializer.openFile(DEFAULT_DIRECTORY, IOMode::Append);
-	ASSERT_TRUE(serializer.isFileOpened());
-
-	auto expectedFileSize = sizeof(int) + PARTIAL_TEST_STRING.size();
-	auto fileSize = serializer.size();
-	EXPECT_EQ(expectedFileSize, fileSize);
-}
-
 TEST_F(ActiveSerializer_fixture, getFileSize_return_size_of_the_opened_file)
 {
 	ut::createDefaultOutput();
@@ -262,4 +249,27 @@ TEST_F(ActiveSerializer_fixture, clear_is_safe_when_no_file_opened)
 {
 	ActiveSerializerTestable serializer;
 	EXPECT_NO_THROW(serializer.clear());
+}
+
+TEST_F(ActiveSerializer_fixture, open_returns_false_if_file_currently_opened)
+{
+	ut::createDefaultOutput();
+
+	ActiveSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY, IOMode::Append);
+	ASSERT_TRUE(serializer.isFileOpened());
+
+	EXPECT_FALSE(serializer.openFile(DEFAULT_DIRECTORY, IOMode::Append));
+}
+
+TEST_F(ActiveSerializer_fixture, file_can_be_opened_again_after_close)
+{
+	ut::createDefaultOutput();
+
+	ActiveSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY, IOMode::Append);
+	ASSERT_TRUE(serializer.isFileOpened());
+
+	serializer.closeFile();
+	EXPECT_TRUE(serializer.openFile(DEFAULT_DIRECTORY, IOMode::Append));
 }

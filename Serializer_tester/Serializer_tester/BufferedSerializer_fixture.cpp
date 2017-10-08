@@ -104,3 +104,59 @@ TEST_F(BufferedSerializer_fixture, getData_calls_data_on_buffer)
 
 	serializer.getData();
 }
+
+TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_file_not_opened)
+{
+	BufferedSerializerTestable serializer;
+
+	EXPECT_TRUE(serializer.isEmpty());
+	EXPECT_TRUE(serializer);
+}
+
+TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_opened_file_has_size_zero_and_buffer_is_empty)
+{
+	ut::createDefaultOutput();
+
+	BufferedSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY);
+
+	ASSERT_TRUE(serializer.isFileOpened());
+	ASSERT_EQ(0, serializer.getFileSize());
+
+	auto& bufferMock = serializer.getBufferMock();
+	EXPECT_CALL(bufferMock, isEmpty()).WillRepeatedly(Return(true));
+
+	EXPECT_TRUE(serializer.isEmpty());
+	EXPECT_TRUE(serializer);
+}
+
+TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_file_size_is_grater_than_zero_and_buffer_is_empty)
+{
+	ut::createDefaultOutput();
+
+	BufferedSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY, srl::IOMode::Append);
+
+	ASSERT_TRUE(serializer.isFileOpened());
+	ASSERT_LT(0, serializer.getFileSize());
+
+	EXPECT_FALSE(serializer.isEmpty());
+	EXPECT_FALSE(serializer);
+}
+
+TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_opened_file_has_size_zero_but_buffer_is_not_empty)
+{
+	ut::createDefaultOutput();
+
+	BufferedSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY);
+
+	ASSERT_TRUE(serializer.isFileOpened());
+	ASSERT_EQ(0, serializer.getFileSize());
+
+	auto& bufferMock = serializer.getBufferMock();
+	EXPECT_CALL(bufferMock, isEmpty()).WillRepeatedly(Return(false));
+
+	EXPECT_FALSE(serializer.isEmpty());
+	EXPECT_FALSE(serializer);
+}

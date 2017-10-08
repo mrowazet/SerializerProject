@@ -18,8 +18,6 @@ public:
 	ActiveSerializer(const ActiveSerializer & serializer) = delete;
 	ActiveSerializer & operator=(const ActiveSerializer & serializer) = delete;
 
-	virtual unsigned int size() const override;
-
 	virtual bool openFile(const Path & dir, const IOMode & mode = IOMode::Truncate) = 0;
 	virtual void closeFile() = 0;
 

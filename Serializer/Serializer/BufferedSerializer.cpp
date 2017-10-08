@@ -41,7 +41,7 @@ bool BufferedSerializer::openFile(const Path & dir, const IOMode & mode)
 	return ActiveSerializer::openFileBase(dir, mode);
 }
 
-void BufferedSerializer::closeFile()
+void BufferedSerializer::closeFile() //TODO data from buffer should be flushed
 {
 	ActiveSerializer::closeFileBase();
 }
@@ -81,14 +81,25 @@ void BufferedSerializer::clear()
 	}
 }
 
+unsigned int BufferedSerializer::size() const
+{
+	return 0;
+}
+
 bool BufferedSerializer::isEmpty() const
 {
-	return false;
+	if(!m_file)
+		return true;
+
+	if (getFileSize() == 0 && m_buffer->isEmpty())
+		return true;
+	else
+		return false;
 }
 
 BufferedSerializer::operator bool() const
 {
-	return false;
+	return isEmpty();
 }
 
 const ByteArray & BufferedSerializer::getData() const
