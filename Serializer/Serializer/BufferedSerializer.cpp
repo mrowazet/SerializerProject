@@ -137,6 +137,26 @@ const Byte_8 & BufferedSerializer::at(const unsigned int & index) const
 	return Byte_8();
 }
 
+BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
+{
+	return *this;
+}
+
+BufferedSerializer & BufferedSerializer::operator<<(const char * c_str)
+{
+	return *this;
+}
+
+BufferedSerializer & BufferedSerializer::operator<<(const std::string & value)
+{
+	return *this;
+}
+
+const BufferedSerializer & BufferedSerializer::operator>>(std::string & value) const
+{
+	return *this;
+}
+
 BufferedSerializer & BufferedSerializer::operator<<(const ISerializable & serializable)
 {
 	return *this;

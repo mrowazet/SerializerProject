@@ -38,6 +38,12 @@ public:
 	virtual Byte_8 & at(const unsigned int & index) = 0;
 	virtual const Byte_8 & at(const unsigned int & index) const = 0;
 
+	virtual ISerializer & operator<<(const ByteArray & byteArray) = 0;
+	virtual ISerializer & operator<<(const char * c_str) = 0;
+
+	virtual ISerializer & operator<<(const std::string & value) = 0;
+	virtual const ISerializer & operator>>(std::string & value) const = 0;
+
 	virtual ISerializer & operator<<(const ISerializable & serializable) = 0;
 	virtual const ISerializer & operator>>(ISerializable & serializable) const = 0;
 };

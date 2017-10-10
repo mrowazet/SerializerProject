@@ -77,12 +77,32 @@ const Byte_8 & ActiveSerializerTestable::at(const unsigned int & index) const
 	return Byte_8();
 }
 
-ISerializer & ActiveSerializerTestable::operator<<(const ISerializable & serializable)
+ActiveSerializerTestable & ActiveSerializerTestable::operator<<(const ByteArray & byteArray)
 {
 	return *this;
 }
 
-const ISerializer & ActiveSerializerTestable::operator >> (ISerializable & serializable) const
+ActiveSerializerTestable & ActiveSerializerTestable::operator<<(const char * c_str)
+{
+	return *this;
+}
+
+ActiveSerializerTestable & ActiveSerializerTestable::operator<<(const std::string & value)
+{
+	return *this;
+}
+
+const ActiveSerializerTestable & ActiveSerializerTestable::operator>>(std::string & value) const
+{
+	return *this;
+}
+
+ActiveSerializerTestable & ActiveSerializerTestable::operator<<(const ISerializable & serializable)
+{
+	return *this;
+}
+
+const ActiveSerializerTestable & ActiveSerializerTestable::operator >> (ISerializable & serializable) const
 {
 	return *this;
 }

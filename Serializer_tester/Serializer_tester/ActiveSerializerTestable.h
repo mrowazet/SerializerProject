@@ -32,8 +32,14 @@ public:
 	virtual Byte_8 & at(const unsigned int & index) override;
 	virtual const Byte_8 & at(const unsigned int & index) const override;
 
-	virtual ISerializer & operator<<(const ISerializable & serializable) override;
-	virtual const ISerializer & operator>>(ISerializable & serializable) const override;
+	virtual ActiveSerializerTestable & operator<<(const ByteArray & byteArray) override;
+	virtual ActiveSerializerTestable & operator<<(const char * c_str) override;
+
+	virtual ActiveSerializerTestable & operator<<(const std::string & value) override;
+	virtual const ActiveSerializerTestable & operator>>(std::string & value) const override;
+
+	virtual ActiveSerializerTestable & operator<<(const ISerializable & serializable) override;
+	virtual const ActiveSerializerTestable & operator>>(ISerializable & serializable) const override;
 };
 
 } //end of namespace

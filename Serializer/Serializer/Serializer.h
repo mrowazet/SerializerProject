@@ -35,11 +35,11 @@ class Serializer : public ISerializer
 		virtual Byte_8 & at(const unsigned int & index) override;
 		virtual const Byte_8 & at(const unsigned int & index) const override;
 
-		Serializer & operator<<(const ByteArray & byteArray);
-		Serializer & operator<<(const char * c_str);
+		virtual Serializer & operator<<(const ByteArray & byteArray) override;
+		virtual Serializer & operator<<(const char * c_str) override;
 
-		Serializer & operator<<(const std::string & value);
-		const Serializer & operator>>(std::string & value) const;
+		virtual Serializer & operator<<(const std::string & value) override;
+		virtual const Serializer & operator>>(std::string & value) const override;
 
 		virtual Serializer & operator<<(const ISerializable & serializable) override;
 		virtual const Serializer & operator>>(ISerializable & serializable) const override;

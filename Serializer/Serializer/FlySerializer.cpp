@@ -75,6 +75,26 @@ const Byte_8 & FlySerializer::at(const unsigned int & index) const
 	return Byte_8();
 }
 
+FlySerializer & FlySerializer::operator<<(const ByteArray & byteArray)
+{
+	return *this;
+}
+
+FlySerializer & FlySerializer::operator<<(const char * c_str)
+{
+	return *this;
+}
+
+FlySerializer & FlySerializer::operator<<(const std::string & value)
+{
+	return *this;
+}
+
+const FlySerializer & FlySerializer::operator>>(std::string & value) const
+{
+	return *this;
+}
+
 FlySerializer & FlySerializer::operator<<(const ISerializable & serializable)
 {
 	return *this;

@@ -40,6 +40,12 @@ public:
 	virtual Byte_8 & at(const unsigned int & index) override;
 	virtual const Byte_8 & at(const unsigned int & index) const override;
 
+	virtual BufferedSerializer & operator<<(const ByteArray & byteArray) override;
+	virtual BufferedSerializer & operator<<(const char * c_str) override;
+
+	virtual BufferedSerializer & operator<<(const std::string & value) override;
+	virtual const BufferedSerializer & operator>>(std::string & value) const override;
+
 	virtual BufferedSerializer & operator<<(const ISerializable & serializable) override;
 	virtual const BufferedSerializer & operator>>(ISerializable & serializable) const override;
 

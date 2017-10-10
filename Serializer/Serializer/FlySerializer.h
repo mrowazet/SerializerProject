@@ -32,6 +32,12 @@ public:
 	virtual Byte_8 & at(const unsigned int & index) override;
 	virtual const Byte_8 & at(const unsigned int & index) const override;
 
+	virtual FlySerializer & operator<<(const ByteArray & byteArray) override;
+	virtual FlySerializer & operator<<(const char * c_str) override;
+
+	virtual FlySerializer & operator<<(const std::string & value) override;
+	virtual const FlySerializer & operator>>(std::string & value) const override;
+
 	virtual FlySerializer & operator<<(const ISerializable & serializable) override;
 	virtual const FlySerializer & operator>>(ISerializable & serializable) const override;
 
