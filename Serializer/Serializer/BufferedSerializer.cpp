@@ -8,7 +8,7 @@ namespace fs = std::experimental::filesystem;
 BufferedSerializer::BufferedSerializer(const unsigned int & maxBufferSize)
 	:MAX_BUFFER_SIZE(validateProvidedBufferSize(maxBufferSize))
 {
-	m_buffer.reset(new Buffer(MAX_BUFFER_SIZE));
+	m_buffer.reset(new Buffer(MAX_BUFFER_SIZE)); //protected ctor used - can't use std::make_unique<T>
 }
 
 BufferedSerializer::BufferedSerializer(const Path & dir,
@@ -139,31 +139,37 @@ const Byte_8 & BufferedSerializer::at(const unsigned int & index) const
 
 BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 {
+	ASSERT_FILE_OPENED();
 	return *this;
 }
 
 BufferedSerializer & BufferedSerializer::operator<<(const char * c_str)
 {
+	ASSERT_FILE_OPENED();
 	return *this;
 }
 
 BufferedSerializer & BufferedSerializer::operator<<(const std::string & value)
 {
+	ASSERT_FILE_OPENED();
 	return *this;
 }
 
 const BufferedSerializer & BufferedSerializer::operator>>(std::string & value) const
 {
+	ASSERT_FILE_OPENED();
 	return *this;
 }
 
 BufferedSerializer & BufferedSerializer::operator<<(const ISerializable & serializable)
 {
+	ASSERT_FILE_OPENED();
 	return *this;
 }
 
 const BufferedSerializer & BufferedSerializer::operator>>(ISerializable & serializable) const
 {
+	ASSERT_FILE_OPENED();
 	return *this;
 }
 

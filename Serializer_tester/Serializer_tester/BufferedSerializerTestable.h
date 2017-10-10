@@ -11,6 +11,9 @@ public:
 	BufferedSerializerTestable(const unsigned int & maxBufferSize = SERIALIZER_BUFFER_MIN);
 	virtual ~BufferedSerializerTestable();
 
+	BufferedSerializerTestable(BufferedSerializerTestable&&) = default;
+	BufferedSerializerTestable & operator=(BufferedSerializerTestable&&) = default;
+
 	BufferMock & getBufferMock();
 };
 

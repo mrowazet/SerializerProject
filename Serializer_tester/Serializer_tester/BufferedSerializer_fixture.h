@@ -12,5 +12,7 @@ public:
 
 	virtual void SetUp() override;
 	virtual void TearDown() override;
+
+	srl::BufferedSerializerTestable makeSerializerWithDefaultDirOpened(const srl::IOMode openMode = srl::IOMode::Truncate);
 };
 

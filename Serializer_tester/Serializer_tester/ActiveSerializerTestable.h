@@ -10,6 +10,8 @@ public:
 	ActiveSerializerTestable();
 	~ActiveSerializerTestable();
 
+	using ActiveSerializer::ASSERT_FILE_OPENED;
+
 	ActiveSerializerTestable(ActiveSerializerTestable && serializer) = default;
 	ActiveSerializerTestable & operator=(ActiveSerializerTestable && serializer) = default;
 

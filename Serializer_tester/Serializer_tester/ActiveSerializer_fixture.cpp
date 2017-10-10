@@ -273,3 +273,20 @@ TEST_F(ActiveSerializer_fixture, file_can_be_opened_again_after_close)
 	serializer.closeFile();
 	EXPECT_TRUE(serializer.openFile(DEFAULT_DIRECTORY, IOMode::Append));
 }
+
+TEST_F(ActiveSerializer_fixture, ASSERT_FILED_OPENED_no_throws_error_if_file_is_opened)
+{
+	ut::createDefaultOutput();
+
+	ActiveSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY);
+	ASSERT_TRUE(serializer.isFileOpened());
+
+	ASSERT_NO_THROW(serializer.ASSERT_FILE_OPENED());
+}
+
+TEST_F(ActiveSerializer_fixture, ASSERT_FILED_OPENED_throws_error_if_file_is_not_opened)
+{
+	ActiveSerializerTestable serializer; 
+	ASSERT_THROW(serializer.ASSERT_FILE_OPENED(), std::ios_base::failure);
+}

@@ -53,7 +53,7 @@ uintmax_t ActiveSerializer::getFileSize() const
 
 bool ActiveSerializer::openFileBase(const Path & dir, const IOMode & mode)
 {
-	if (m_file)
+	if (isFileOpened())
 		return false;
 
 	try
@@ -70,7 +70,7 @@ bool ActiveSerializer::openFileBase(const Path & dir, const IOMode & mode)
 
 void ActiveSerializer::closeFileBase()
 {
-	if (m_file)
+	if (isFileOpened())
 	{
 		m_file->close();
 		m_file.reset();
@@ -80,7 +80,7 @@ void ActiveSerializer::closeFileBase()
 
 void ActiveSerializer::clearBase()
 {
-	if (m_file)
+	if (isFileOpened())
 	{
 		m_file->close();
 		m_file.reset();
@@ -91,6 +91,15 @@ void ActiveSerializer::clearBase()
 void ActiveSerializer::clearFileName()
 {
 	m_filePath.clear();
+}
+
+void ActiveSerializer::ASSERT_FILE_OPENED() const
+{
+	if (!isFileOpened())
+	{
+		std::string failureExplanation = "Error: File is not opened!\n";
+		throw std::ios_base::failure(failureExplanation);
+	}
 }
 
 } //end of namespace

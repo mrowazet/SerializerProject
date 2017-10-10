@@ -1,4 +1,5 @@
 #include "BufferedSerializer_fixture.h"
+#include "SerializableTestClass.h"
 
 using namespace testing;
 using namespace srl;
@@ -18,6 +19,19 @@ void BufferedSerializer_fixture::SetUp()
 void BufferedSerializer_fixture::TearDown()
 {
 	ut::cleanUpTestFilesAndDirectories();
+}
+
+//TODO use when move semantic is implemented to BufferedSerializer
+srl::BufferedSerializerTestable BufferedSerializer_fixture::makeSerializerWithDefaultDirOpened(const srl::IOMode openMode)
+{
+	ut::createDefaultOutput();
+
+	BufferedSerializerTestable serializer;
+	serializer.openFile(DEFAULT_DIRECTORY, openMode);
+
+	[&](){ ASSERT_TRUE(serializer.isFileOpened()); }();
+
+	return serializer;
 }
 
 TEST_F(BufferedSerializer_fixture, BufferMock_can_be_instantiate)
@@ -159,4 +173,27 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_opened_file_has_size
 
 	EXPECT_FALSE(serializer.isEmpty());
 	EXPECT_FALSE(serializer);
+}
+
+TEST_F(BufferedSerializer_fixture, operators_to_read_write_should_trhow_error_if_file_is_not_opened)
+{
+	BufferedSerializerTestable serializer;
+
+	ByteArray byteArray;
+	ASSERT_THROW(serializer << byteArray, std::ios_base::failure);
+
+	std::string testString = "test";
+	ASSERT_THROW(serializer << testString, std::ios_base::failure);
+	ASSERT_THROW(serializer >> testString, std::ios_base::failure);
+
+	ASSERT_THROW(serializer << testString.c_str(), std::ios_base::failure);
+
+	SerializableTestClass serializableObject;
+	ASSERT_THROW(serializer << serializableObject, std::ios_base::failure);
+	ASSERT_THROW(serializer >> serializableObject, std::ios_base::failure);
+}
+
+TEST_F(BufferedSerializer_fixture, ByteArray_is_added_to_buffer_if_size_is_lower_than_buffer_size)
+{
+	//TODO
 }

@@ -36,6 +36,8 @@ protected:
 	void clearBase();
 
 	void clearFileName();
+
+	void ASSERT_FILE_OPENED() const;
 };
 
 } //end of namespace
