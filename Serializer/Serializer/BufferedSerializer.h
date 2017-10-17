@@ -66,6 +66,7 @@ public:
 
 protected:
 	const unsigned int MAX_BUFFER_SIZE;
+	void moveBufferedSerializerContent(BufferedSerializer && serializer);
 	unsigned int validateProvidedBufferSize(const unsigned int & maxBufferSize);
 
 	std::unique_ptr<IBuffer> m_buffer;

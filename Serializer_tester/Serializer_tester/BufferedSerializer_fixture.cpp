@@ -21,7 +21,6 @@ void BufferedSerializer_fixture::TearDown()
 	ut::cleanUpTestFilesAndDirectories();
 }
 
-//TODO use when move semantic is implemented to BufferedSerializer
 srl::BufferedSerializerTestable BufferedSerializer_fixture::makeSerializerWithDefaultDirOpened(const srl::IOMode openMode)
 {
 	ut::createDefaultOutput();
@@ -32,6 +31,23 @@ srl::BufferedSerializerTestable BufferedSerializer_fixture::makeSerializerWithDe
 	[&](){ ASSERT_TRUE(serializer.isFileOpened()); }();
 
 	return serializer;
+}
+
+TEST_F(BufferedSerializer_fixture, canBeConstructedWithMoveSemantic)
+{
+	auto bufferSize = 24;
+	BufferedSerializer serializer(bufferSize);
+	BufferedSerializer destSerializer(std::move(serializer));
+
+	EXPECT_EQ(bufferSize, destSerializer.getBufferSize());
+}
+
+TEST_F(BufferedSerializer_fixture, canBeAssignedWithMoveSemantic)
+{
+	BufferedSerializer serializer;
+	BufferedSerializer destSerializer;
+
+	destSerializer = std::move(serializer);
 }
 
 TEST_F(BufferedSerializer_fixture, BufferMock_can_be_instantiate)
@@ -86,12 +102,7 @@ TEST_F(BufferedSerializer_fixture, clearBuffer_clears_internal_buffer)
 
 TEST_F(BufferedSerializer_fixture, clear_clears_buffer)
 {
-	ut::createDefaultOutput();
-
-	BufferedSerializerTestable serializer;
-	serializer.openFile(DEFAULT_DIRECTORY);
-
-	ASSERT_TRUE(serializer.isFileOpened());
+	auto serializer = makeSerializerWithDefaultDirOpened();
 
 	auto& bufferMock = serializer.getBufferMock();
 	EXPECT_CALL(bufferMock, clear());
@@ -129,12 +140,7 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_file_not_opened)
 
 TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_opened_file_has_size_zero_and_buffer_is_empty)
 {
-	ut::createDefaultOutput();
-
-	BufferedSerializerTestable serializer;
-	serializer.openFile(DEFAULT_DIRECTORY);
-
-	ASSERT_TRUE(serializer.isFileOpened());
+	auto serializer = makeSerializerWithDefaultDirOpened();
 	ASSERT_EQ(0, serializer.getFileSize());
 
 	auto& bufferMock = serializer.getBufferMock();
@@ -146,12 +152,7 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_opened_file_has_size_
 
 TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_file_size_is_grater_than_zero_and_buffer_is_empty)
 {
-	ut::createDefaultOutput();
-
-	BufferedSerializerTestable serializer;
-	serializer.openFile(DEFAULT_DIRECTORY, srl::IOMode::Append);
-
-	ASSERT_TRUE(serializer.isFileOpened());
+	auto serializer = makeSerializerWithDefaultDirOpened(srl::IOMode::Append);
 	ASSERT_LT(0, serializer.getFileSize());
 
 	EXPECT_FALSE(serializer.isEmpty());
@@ -160,12 +161,7 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_file_size_is_grater_
 
 TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_opened_file_has_size_zero_but_buffer_is_not_empty)
 {
-	ut::createDefaultOutput();
-
-	BufferedSerializerTestable serializer;
-	serializer.openFile(DEFAULT_DIRECTORY);
-
-	ASSERT_TRUE(serializer.isFileOpened());
+	auto serializer = makeSerializerWithDefaultDirOpened();
 	ASSERT_EQ(0, serializer.getFileSize());
 
 	auto& bufferMock = serializer.getBufferMock();
@@ -195,5 +191,6 @@ TEST_F(BufferedSerializer_fixture, operators_to_read_write_should_trhow_error_if
 
 TEST_F(BufferedSerializer_fixture, ByteArray_is_added_to_buffer_if_size_is_lower_than_buffer_size)
 {
-	//TODO
+
+
 }

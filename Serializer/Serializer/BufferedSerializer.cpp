@@ -22,13 +22,22 @@ BufferedSerializer::BufferedSerializer(const Path & dir,
 BufferedSerializer::BufferedSerializer(BufferedSerializer && serializer)
 	:MAX_BUFFER_SIZE(serializer.MAX_BUFFER_SIZE)
 {
-	//TODO add move semantic for constructor
+	moveBufferedSerializerContent(std::move(serializer));
 }
 
 BufferedSerializer & BufferedSerializer::operator=(BufferedSerializer && serializer)
 {
-	//TODO add move semantic for assignment operator
+	if (this != &serializer)
+		moveBufferedSerializerContent(std::move(serializer));
+
 	return *this;
+}
+
+void BufferedSerializer::moveBufferedSerializerContent(BufferedSerializer && serializer)
+{
+	//TODO expand
+	static_cast<ActiveSerializer&>(*this) = std::move(serializer);
+	m_buffer = std::move(serializer.m_buffer);
 }
 
 BufferedSerializer::~BufferedSerializer()
