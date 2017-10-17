@@ -5,22 +5,20 @@ namespace srl
 
 namespace fs = std::experimental::filesystem;
 
-BufferedSerializer::BufferedSerializer(const unsigned int & maxBufferSize)
-	:MAX_BUFFER_SIZE(validateProvidedBufferSize(maxBufferSize))
+BufferedSerializer::BufferedSerializer(const unsigned int & bufferSize)
 {
-	m_buffer.reset(new Buffer(MAX_BUFFER_SIZE)); //protected ctor used - can't use std::make_unique<T>
+	initBuffer(bufferSize);
 }
 
 BufferedSerializer::BufferedSerializer(const Path & dir,
 									   const IOMode & mode,
-									   const unsigned int & maxBufferSize)
-	:MAX_BUFFER_SIZE(validateProvidedBufferSize(maxBufferSize))
+									   const unsigned int & bufferSize)
+	: BufferedSerializer(bufferSize)
 {
 	ActiveSerializer::openFileBase(dir, mode);
 }
 
 BufferedSerializer::BufferedSerializer(BufferedSerializer && serializer)
-	:MAX_BUFFER_SIZE(serializer.MAX_BUFFER_SIZE)
 {
 	moveBufferedSerializerContent(std::move(serializer));
 }
@@ -33,16 +31,37 @@ BufferedSerializer & BufferedSerializer::operator=(BufferedSerializer && seriali
 	return *this;
 }
 
+BufferedSerializer::~BufferedSerializer()
+{
+	ActiveSerializer::closeFileBase();
+}
+
 void BufferedSerializer::moveBufferedSerializerContent(BufferedSerializer && serializer)
 {
-	//TODO expand
+	//TODO expand - move rest 
 	static_cast<ActiveSerializer&>(*this) = std::move(serializer);
 	m_buffer = std::move(serializer.m_buffer);
 }
 
-BufferedSerializer::~BufferedSerializer()
+void BufferedSerializer::initBuffer(const unsigned int & bufferSize)
 {
-	ActiveSerializer::closeFileBase();
+	auto size = bufferSize;
+
+	if (bufferSize < SERIALIZER_BUFFER_MIN)
+		size = SERIALIZER_BUFFER_MIN;
+
+	if (bufferSize > SERIALIZER_BUFFER_MAX)
+		size = SERIALIZER_BUFFER_MAX;
+
+	m_buffer.reset(new Buffer(size)); //protected ctor used - can't use std::make_unique<T>
+}
+
+void BufferedSerializer::writeToFile(const char * data, const unsigned int size)
+{
+}
+
+void BufferedSerializer::readFromFile(const unsigned int size)
+{
 }
 
 bool BufferedSerializer::openFile(const Path & dir, const IOMode & mode)
@@ -53,22 +72,6 @@ bool BufferedSerializer::openFile(const Path & dir, const IOMode & mode)
 void BufferedSerializer::closeFile() //TODO data from buffer should be flushed
 {
 	ActiveSerializer::closeFileBase();
-}
-
-unsigned int BufferedSerializer::validateProvidedBufferSize(const unsigned int & maxBufferSize)
-{
-	if (maxBufferSize < SERIALIZER_BUFFER_MIN)
-		return SERIALIZER_BUFFER_MIN;
-
-	if (maxBufferSize > SERIALIZER_BUFFER_MAX)
-		return SERIALIZER_BUFFER_MAX;
-
-	return maxBufferSize;
-}
-
-unsigned int BufferedSerializer::getMaxBufferSize() const
-{
-	return MAX_BUFFER_SIZE;
 }
 
 unsigned int BufferedSerializer::getBufferSize() const

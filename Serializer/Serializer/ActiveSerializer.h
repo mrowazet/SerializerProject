@@ -35,6 +35,9 @@ protected:
 	void closeFileBase();
 	void clearBase();
 
+	virtual void writeToFile(const char* data, const unsigned int size) = 0;
+	virtual void readFromFile(const unsigned int size) = 0;
+
 	void clearFileName();
 
 	void ASSERT_FILE_OPENED() const;

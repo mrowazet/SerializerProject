@@ -14,5 +14,6 @@ public:
 	virtual void TearDown() override;
 
 	srl::BufferedSerializerTestable makeSerializerWithDefaultDirOpened(const srl::IOMode openMode = srl::IOMode::Truncate);
+	srl::ByteArray makeByteArray(const unsigned int& size, srl::Byte_8 byte = srl::Byte_8("10101010"));
 };
 

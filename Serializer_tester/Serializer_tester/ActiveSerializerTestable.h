@@ -18,6 +18,9 @@ public:
 	virtual bool openFile(const Path & dir, const IOMode & mode = IOMode::Truncate) override;
 	virtual void closeFile() override;
 
+	virtual void writeToFile(const char* data, const unsigned int size) override;
+	virtual void readFromFile(const unsigned int size) override;
+
 	virtual void clear() override;
 	virtual unsigned int size() const override;
 	virtual bool isEmpty() const override;

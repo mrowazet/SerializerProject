@@ -12,7 +12,7 @@ public:
 	BufferedSerializer(const unsigned int & maxBufferSize = SERIALIZER_BUFFER_MIN);
 	BufferedSerializer(const Path & dir,
 					   const IOMode & mode = IOMode::Truncate,
-					   const unsigned int & maxBufferSize = SERIALIZER_BUFFER_MIN);
+					   const unsigned int & ufferSize = SERIALIZER_BUFFER_MIN);
 	virtual ~BufferedSerializer();
 
 	BufferedSerializer(BufferedSerializer && serializer);
@@ -50,7 +50,6 @@ public:
 	virtual const BufferedSerializer & operator>>(ISerializable & serializable) const override;
 
 	//BufferedSerializer specific
-	unsigned int getMaxBufferSize() const;
 	unsigned int getBufferSize() const; //TODO probably should be removed
 	void clearBuffer();
 
@@ -65,9 +64,11 @@ public:
 	//open after open situation
 
 protected:
-	const unsigned int MAX_BUFFER_SIZE;
 	void moveBufferedSerializerContent(BufferedSerializer && serializer);
-	unsigned int validateProvidedBufferSize(const unsigned int & maxBufferSize);
+	void initBuffer(const unsigned int & bufferSize);
+
+	virtual void writeToFile(const char* data, const unsigned int size);
+	virtual void readFromFile(const unsigned int size);
 
 	std::unique_ptr<IBuffer> m_buffer;
 

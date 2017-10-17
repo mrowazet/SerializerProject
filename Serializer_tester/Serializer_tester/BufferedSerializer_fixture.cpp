@@ -33,13 +33,21 @@ srl::BufferedSerializerTestable BufferedSerializer_fixture::makeSerializerWithDe
 	return serializer;
 }
 
+srl::ByteArray BufferedSerializer_fixture::makeByteArray(const unsigned int & size, srl::Byte_8 byte)
+{
+	srl::ByteArray byteArray(size);
+
+	for (auto& byteToFill : byteArray)
+		byteToFill = byte;
+
+	return byteArray;
+}
+
 TEST_F(BufferedSerializer_fixture, canBeConstructedWithMoveSemantic)
 {
 	auto bufferSize = 24;
 	BufferedSerializer serializer(bufferSize);
 	BufferedSerializer destSerializer(std::move(serializer));
-
-	EXPECT_EQ(bufferSize, destSerializer.getBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, canBeAssignedWithMoveSemantic)
@@ -58,7 +66,7 @@ TEST_F(BufferedSerializer_fixture, BufferMock_can_be_instantiate)
 TEST_F(BufferedSerializer_fixture, default_consturtor_set_buffer_size_to_minimum)
 {
 	BufferedSerializer serializer;
-	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getMaxBufferSize());
+	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_value_if_in_range)
@@ -66,7 +74,7 @@ TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_value_if_in_range)
 	auto bufferSize = 54;
 	BufferedSerializer serializer(bufferSize);
 
-	EXPECT_EQ(bufferSize, serializer.getMaxBufferSize());
+	EXPECT_EQ(bufferSize, serializer.getBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_min_if_below_min)
@@ -74,7 +82,7 @@ TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_min_if_below_min)
 	auto bufferSize = 15;
 	BufferedSerializer serializer(bufferSize);
 
-	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getMaxBufferSize());
+	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_max_if_grater_than_max)
@@ -82,7 +90,7 @@ TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_max_if_grater_than_ma
 	auto bufferSize = 257;
 	BufferedSerializer serializer(bufferSize);
 
-	EXPECT_EQ(SERIALIZER_BUFFER_MAX, serializer.getMaxBufferSize());
+	EXPECT_EQ(SERIALIZER_BUFFER_MAX, serializer.getBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, file_is_not_opened_when_default_constructor_is_used)
@@ -191,6 +199,5 @@ TEST_F(BufferedSerializer_fixture, operators_to_read_write_should_trhow_error_if
 
 TEST_F(BufferedSerializer_fixture, ByteArray_is_added_to_buffer_if_size_is_lower_than_buffer_size)
 {
-
 
 }

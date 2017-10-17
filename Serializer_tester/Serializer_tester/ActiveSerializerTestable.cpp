@@ -23,6 +23,14 @@ void ActiveSerializerTestable::closeFile()
 	ActiveSerializer::closeFileBase();
 }
 
+void ActiveSerializerTestable::writeToFile(const char * data, const unsigned int size)
+{
+}
+
+void ActiveSerializerTestable::readFromFile(const unsigned int size)
+{
+}
+
 void ActiveSerializerTestable::clear()
 {
 	ActiveSerializer::clearBase();
