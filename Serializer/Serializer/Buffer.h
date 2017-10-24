@@ -53,7 +53,7 @@ protected:
 	
 	ByteArray m_data;
 	mutable unsigned int m_readIndex = 0;
-	mutable unsigned int m_writeIndex = 0;
+	unsigned int m_writeIndex = 0;
 };
 
 } //end of namespace

@@ -27,7 +27,7 @@ void ActiveSerializerTestable::writeToFile(const char * data, const unsigned int
 {
 }
 
-void ActiveSerializerTestable::readFromFile(const unsigned int size)
+void ActiveSerializerTestable::readFromFile(const unsigned int size) const
 {
 }
 

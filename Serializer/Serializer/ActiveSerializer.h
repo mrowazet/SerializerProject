@@ -21,9 +21,9 @@ public:
 	virtual bool openFile(const Path & dir, const IOMode & mode = IOMode::Truncate) = 0;
 	virtual void closeFile() = 0;
 
-	bool isFileOpened() const;
-	Path getFilePath() const;
-	uintmax_t getFileSize() const;
+	virtual bool isFileOpened() const;
+	virtual Path getFilePath() const;
+	virtual uintmax_t getFileSize() const;
 
 protected:
 	std::unique_ptr<std::fstream> m_file;
@@ -36,7 +36,7 @@ protected:
 	void clearBase();
 
 	virtual void writeToFile(const char* data, const unsigned int size) = 0;
-	virtual void readFromFile(const unsigned int size) = 0;
+	virtual void readFromFile(const unsigned int size) const = 0;
 
 	void clearFileName();
 

@@ -7,13 +7,20 @@ namespace srl
 BufferedSerializerTestable::BufferedSerializerTestable(const unsigned int & maxBufferSize)
 	: BufferedSerializer(maxBufferSize)
 {
-	m_buffer = std::make_unique<testing::StrictMock<BufferMock>>();
+	m_buffer = std::make_unique<BufferMock>();
+	EXPECT_CALL(static_cast<BufferMock&>(*m_buffer), size()).WillRepeatedly(Return(maxBufferSize));
+
 	m_fileHandlingMock = std::make_unique<testing::StrictMock<FileHandlingMock>>();
 }
 
 BufferedSerializerTestable::~BufferedSerializerTestable()
 {
 
+}
+
+uintmax_t BufferedSerializerTestable::getFileSize() const
+{
+	return m_fileHandlingMock->getFileSize();
 }
 
 BufferMock & BufferedSerializerTestable::getBufferMock()

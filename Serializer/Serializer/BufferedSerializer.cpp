@@ -60,7 +60,7 @@ void BufferedSerializer::writeToFile(const char * data, const unsigned int size)
 {
 }
 
-void BufferedSerializer::readFromFile(const unsigned int size)
+void BufferedSerializer::readFromFile(const unsigned int size) const
 {
 }
 
@@ -69,7 +69,7 @@ bool BufferedSerializer::openFile(const Path & dir, const IOMode & mode)
 	return ActiveSerializer::openFileBase(dir, mode);
 }
 
-void BufferedSerializer::closeFile() //TODO data from buffer should be flushed
+void BufferedSerializer::closeFile() //TODO data from buffer should be flushed, clearIndexes, clearBuffer
 {
 	ActiveSerializer::closeFileBase();
 }
@@ -79,18 +79,25 @@ unsigned int BufferedSerializer::getBufferSize() const
 	return m_buffer->size();
 }
 
+void BufferedSerializer::clear()
+{
+	if(isFileOpened())
+	{
+		ActiveSerializer::clearBase();
+		clearBuffer();
+		clearIndexes();
+	}
+}
+
 void BufferedSerializer::clearBuffer()
 {
 	m_buffer->clear();
 }
 
-void BufferedSerializer::clear()
+void BufferedSerializer::clearIndexes()
 {
-	if(m_file)
-	{
-		ActiveSerializer::clearBase();
-		clearBuffer();
-	}
+	m_readIndex = 0;
+	m_writeIndex = 0;
 }
 
 unsigned int BufferedSerializer::size() const
@@ -100,7 +107,7 @@ unsigned int BufferedSerializer::size() const
 
 bool BufferedSerializer::isEmpty() const
 {
-	if(!m_file)
+	if(!isFileOpened())
 		return true;
 
 	if (getFileSize() == 0 && m_buffer->isEmpty())
@@ -121,22 +128,30 @@ const ByteArray & BufferedSerializer::getData() const
 
 int BufferedSerializer::getWriteIndex() const
 {
-	return 0;
+	return m_writeIndex;
 }
 
 int BufferedSerializer::getReadIndex() const
 {
-	return 0;
+	return m_readIndex;
 }
 
 bool BufferedSerializer::setWriteIndex(const int & index)
 {
-	return false;
+	if (!isFileOpened())
+		return false;
+
+	m_writeIndex = index;
+	return true;
 }
 
 bool BufferedSerializer::setReadIndex(const int & index) const
 {
-	return false;
+	if (!isFileOpened())
+		return false;
+
+	m_readIndex = index;
+	return true;
 }
 
 Byte_8 & BufferedSerializer::at(const unsigned int & index)
@@ -152,6 +167,18 @@ const Byte_8 & BufferedSerializer::at(const unsigned int & index) const
 BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 {
 	ASSERT_FILE_OPENED();
+
+
+	if (byteArray.size() < m_buffer->size())
+	{
+		m_buffer->write(byteArray);
+		m_writeIndex += byteArray.size();
+	}
+	else
+	{
+
+	}
+
 	return *this;
 }
 

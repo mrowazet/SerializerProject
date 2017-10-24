@@ -149,7 +149,10 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_file_not_opened)
 TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_opened_file_has_size_zero_and_buffer_is_empty)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
-	ASSERT_EQ(0, serializer.getFileSize());
+
+	auto fileSize = 0;
+	auto& fileMock = serializer.getFileHandlingMock();
+	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(fileSize));
 
 	auto& bufferMock = serializer.getBufferMock();
 	EXPECT_CALL(bufferMock, isEmpty()).WillRepeatedly(Return(true));
@@ -161,7 +164,10 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_opened_file_has_size_
 TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_file_size_is_grater_than_zero_and_buffer_is_empty)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened(srl::IOMode::Append);
-	ASSERT_LT(0, serializer.getFileSize());
+	
+	auto fileSize = 10;
+	auto& fileMock = serializer.getFileHandlingMock();
+	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(fileSize));
 
 	EXPECT_FALSE(serializer.isEmpty());
 	EXPECT_FALSE(serializer);
@@ -170,7 +176,10 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_file_size_is_grater_
 TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_opened_file_has_size_zero_but_buffer_is_not_empty)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
-	ASSERT_EQ(0, serializer.getFileSize());
+
+	auto fileSize = 0;
+	auto& fileMock = serializer.getFileHandlingMock();
+	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(fileSize));
 
 	auto& bufferMock = serializer.getBufferMock();
 	EXPECT_CALL(bufferMock, isEmpty()).WillRepeatedly(Return(false));
@@ -197,7 +206,84 @@ TEST_F(BufferedSerializer_fixture, operators_to_read_write_should_trhow_error_if
 	ASSERT_THROW(serializer >> serializableObject, std::ios_base::failure);
 }
 
-TEST_F(BufferedSerializer_fixture, ByteArray_is_added_to_buffer_if_size_is_lower_than_buffer_size)
+TEST_F(BufferedSerializer_fixture, ByteArray_is_added_to_buffer_if_size_is_lower_than_buffer_size_write_index_zero)
 {
+	auto byteArray = makeByteArray(SERIALIZER_BUFFER_MIN - 1);
+	auto serializer = makeSerializerWithDefaultDirOpened();
 
+	auto& bufferMock = serializer.getBufferMock();
+	EXPECT_CALL(bufferMock, write(byteArray));
+
+	auto& fileMock = serializer.getFileHandlingMock();
+	EXPECT_CALL(fileMock, writeToFile(_, _)).Times(0);
+
+	serializer << byteArray;
 }
+
+TEST_F(BufferedSerializer_fixture, Write_index_should_be_incremented_after_write_of_ByteArray)
+{
+	auto dataSize = 5u;
+	auto byteArray = makeByteArray(dataSize);
+	auto serializer = makeSerializerWithDefaultDirOpened();
+
+	auto& bufferMock = serializer.getBufferMock();
+	EXPECT_CALL(bufferMock, write(testing::A<const ByteArray&>()));
+
+	serializer << byteArray;
+
+	EXPECT_EQ(dataSize, serializer.getWriteIndex());
+}
+
+TEST_F(BufferedSerializer_fixture, Set_get_indexes_works_correctly_within_range)
+{
+	auto serializer = makeSerializerWithDefaultDirOpened();
+
+	ASSERT_EQ(0, serializer.getWriteIndex());
+	ASSERT_EQ(0, serializer.getReadIndex());
+
+	auto writeIndex = 4;
+	auto readIndex = 7;
+
+	EXPECT_TRUE(serializer.setWriteIndex(writeIndex));
+	EXPECT_TRUE(serializer.setReadIndex(readIndex));
+
+	EXPECT_EQ(writeIndex, serializer.getWriteIndex());
+	EXPECT_EQ(readIndex, serializer.getReadIndex());
+}
+
+TEST_F(BufferedSerializer_fixture, Read_Write_indexes_are_zero_after_clear)
+{
+	auto serializer = makeSerializerWithDefaultDirOpened();
+	const auto index = 7;
+
+	ASSERT_TRUE(serializer.setReadIndex(index));
+	ASSERT_TRUE(serializer.setWriteIndex(index));
+
+	serializer.clear();
+
+	EXPECT_EQ(0, serializer.getReadIndex());
+	EXPECT_EQ(0, serializer.getWriteIndex());
+}
+
+TEST_F(BufferedSerializer_fixture, Set_indexes_should_return_false_if_file_not_opened)
+{
+	BufferedSerializer serializer;
+	const auto index = 7;
+
+	ASSERT_FALSE(serializer.setReadIndex(index));
+	ASSERT_FALSE(serializer.setWriteIndex(index));
+}
+
+//TODO implement interface for file and testable class
+//TEST_F(BufferedSerializer_fixture, Set_indexes_should_return_false_if_grater_than_file_size)
+//{
+//	auto serializer = makeSerializerWithDefaultDirOpened();
+//
+//	auto fileSize = 5;
+//	auto& fileMock = serializer.getFileHandlingMock();
+//	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(fileSize));
+//
+//	auto index = 6;
+//	EXPECT_FALSE(serializer.setReadIndex(index));
+//	EXPECT_FALSE(serializer.setWriteIndex(index));
+//}

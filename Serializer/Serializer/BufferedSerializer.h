@@ -64,11 +64,17 @@ public:
 	//open after open situation
 
 protected:
+	using IndexPosition = unsigned int;
+
+	mutable IndexPosition m_readIndex = 0;
+	IndexPosition m_writeIndex = 0;
+
 	void moveBufferedSerializerContent(BufferedSerializer && serializer);
 	void initBuffer(const unsigned int & bufferSize);
+	void clearIndexes();
 
 	virtual void writeToFile(const char* data, const unsigned int size);
-	virtual void readFromFile(const unsigned int size);
+	virtual void readFromFile(const unsigned int size) const;
 
 	std::unique_ptr<IBuffer> m_buffer;
 
