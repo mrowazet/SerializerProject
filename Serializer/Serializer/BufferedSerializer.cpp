@@ -138,20 +138,38 @@ int BufferedSerializer::getReadIndex() const
 
 bool BufferedSerializer::setWriteIndex(const int & index)
 {
-	if (!isFileOpened())
+	if (!isFileOpened() || !isWriteIndexCorrect(index))
+	{
 		return false;
+	}
+	else
+	{
+		m_writeIndex = index;
+		return true;
+	}
+}
 
-	m_writeIndex = index;
-	return true;
+bool BufferedSerializer::isWriteIndexCorrect(const IndexPosition & index) const
+{
+	return index <= getFileSize() && index > 0;
 }
 
 bool BufferedSerializer::setReadIndex(const int & index) const
 {
-	if (!isFileOpened())
+	if (!isFileOpened() || !isReadIndexCorrect(index))
+	{
 		return false;
+	}
+	else
+	{
+		m_readIndex = index;
+		return true;
+	}
+}
 
-	m_readIndex = index;
-	return true;
+bool BufferedSerializer::isReadIndexCorrect(const IndexPosition & index) const
+{
+	return index < getFileSize() && index > 0;
 }
 
 Byte_8 & BufferedSerializer::at(const unsigned int & index)

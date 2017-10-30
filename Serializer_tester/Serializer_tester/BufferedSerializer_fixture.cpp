@@ -25,10 +25,13 @@ srl::BufferedSerializerTestable BufferedSerializer_fixture::makeSerializerWithDe
 {
 	ut::createDefaultOutput();
 
-	BufferedSerializerTestable serializer;
+	BufferedSerializerTestable serializer(SERIALIZER_BUFFER_MIN);
 	serializer.openFile(DEFAULT_DIRECTORY, openMode);
 
 	[&](){ ASSERT_TRUE(serializer.isFileOpened()); }();
+
+	auto& fileMock = serializer.getFileHandlingMock();
+	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(SERIALIZER_BUFFER_MIN));
 
 	return serializer;
 }
@@ -259,6 +262,7 @@ TEST_F(BufferedSerializer_fixture, Read_Write_indexes_are_zero_after_clear)
 	ASSERT_TRUE(serializer.setReadIndex(index));
 	ASSERT_TRUE(serializer.setWriteIndex(index));
 
+	EXPECT_CALL(serializer.getBufferMock(), clear());
 	serializer.clear();
 
 	EXPECT_EQ(0, serializer.getReadIndex());
@@ -274,16 +278,52 @@ TEST_F(BufferedSerializer_fixture, Set_indexes_should_return_false_if_file_not_o
 	ASSERT_FALSE(serializer.setWriteIndex(index));
 }
 
-//TODO implement interface for file and testable class
-//TEST_F(BufferedSerializer_fixture, Set_indexes_should_return_false_if_grater_than_file_size)
-//{
-//	auto serializer = makeSerializerWithDefaultDirOpened();
-//
-//	auto fileSize = 5;
-//	auto& fileMock = serializer.getFileHandlingMock();
-//	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(fileSize));
-//
-//	auto index = 6;
-//	EXPECT_FALSE(serializer.setReadIndex(index));
-//	EXPECT_FALSE(serializer.setWriteIndex(index));
-//}
+
+class TestIndexSetters_fixture : public BufferedSerializer_fixture 							 
+{
+public:
+	virtual void SetUp() override
+	{
+		m_serializer = makeSerializerWithDefaultDirOpened();
+	}
+
+	virtual void TearDown() override
+	{
+		m_serializer.closeFile();
+	}
+
+protected:
+	const unsigned int FILE_SIZE = SERIALIZER_BUFFER_MIN;
+	srl::BufferedSerializerTestable m_serializer;
+};
+
+TEST_F(TestIndexSetters_fixture, Set_write_index_should_return_false_if_grater_than_file_size)
+{
+	EXPECT_FALSE(m_serializer.setWriteIndex(FILE_SIZE + 1));
+}
+
+TEST_F(TestIndexSetters_fixture, Set_write_index_should_return_true_if_equal_of_lower_than_file_size)
+{
+	EXPECT_TRUE(m_serializer.setWriteIndex(FILE_SIZE));
+	EXPECT_TRUE(m_serializer.setWriteIndex(FILE_SIZE - 1));
+}
+
+TEST_F(TestIndexSetters_fixture, Set_read_index_should_return_false_if_equal_grater_than_file_size)
+{
+	EXPECT_FALSE(m_serializer.setReadIndex(FILE_SIZE));
+	EXPECT_FALSE(m_serializer.setReadIndex(FILE_SIZE + 1));
+}
+
+TEST_F(TestIndexSetters_fixture, Set_read_index_should_return_true_if_lower_than_file_size)
+{
+	EXPECT_TRUE(m_serializer.setReadIndex(FILE_SIZE - 1));
+}
+
+TEST_F(TestIndexSetters_fixture, Set_read_write_should_return_false_if_lower_than_zero)
+{
+	auto negativeValue = -1;
+
+	EXPECT_FALSE(m_serializer.setWriteIndex(negativeValue));
+	EXPECT_FALSE(m_serializer.setReadIndex(negativeValue));
+}
+

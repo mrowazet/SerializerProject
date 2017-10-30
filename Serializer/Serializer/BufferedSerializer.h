@@ -73,6 +73,9 @@ protected:
 	void initBuffer(const unsigned int & bufferSize);
 	void clearIndexes();
 
+	bool isReadIndexCorrect(const IndexPosition & index) const;
+	bool isWriteIndexCorrect(const IndexPosition & index) const;
+
 	virtual void writeToFile(const char* data, const unsigned int size);
 	virtual void readFromFile(const unsigned int size) const;
 
