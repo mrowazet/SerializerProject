@@ -33,6 +33,11 @@ FileHandlingMock & BufferedSerializerTestable::getFileHandlingMock()
 	return dynamic_cast<FileHandlingMock&>(*m_fileHandlingMock);
 }
 
+BufferedDataInfo & BufferedSerializerTestable::getBufferDataInfo()
+{
+	return m_bufferedDataInfo;
+}
+
 void BufferedSerializerTestable::writeToFile(const char* data, const unsigned int size)
 {
 	m_fileHandlingMock->writeToFile(data, size);

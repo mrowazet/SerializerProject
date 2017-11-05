@@ -1,6 +1,7 @@
 #pragma once
 #include "ActiveSerializer.h"
 #include "Buffer.h"
+#include "BufferedDataInfo.h"
 #include <memory>
 
 namespace srl
@@ -50,7 +51,7 @@ public:
 	virtual const BufferedSerializer & operator>>(ISerializable & serializable) const override;
 
 	//BufferedSerializer specific
-	unsigned int getBufferSize() const; //TODO probably should be removed
+	unsigned int getMaxBufferSize() const;
 	void clearBuffer();
 
 	//TODO
@@ -69,6 +70,9 @@ protected:
 	mutable IndexPosition m_readIndex = 0;
 	IndexPosition m_writeIndex = 0;
 
+	std::unique_ptr<IBuffer> m_buffer;
+	BufferedDataInfo m_bufferedDataInfo;
+
 	void moveBufferedSerializerContent(BufferedSerializer && serializer);
 	void initBuffer(const unsigned int & bufferSize);
 	void clearIndexes();
@@ -76,10 +80,11 @@ protected:
 	bool isReadIndexCorrect(const IndexPosition & index) const;
 	bool isWriteIndexCorrect(const IndexPosition & index) const;
 
+	unsigned int getLastCorrectBufferReadIndex() const;
+	unsigned int getLastCorrectBufferWriteIndex() const;
+
 	virtual void writeToFile(const char* data, const unsigned int size);
 	virtual void readFromFile(const unsigned int size) const;
-
-	std::unique_ptr<IBuffer> m_buffer;
 
 	using ActiveSerializer::openFileForRead;
 	using ActiveSerializer::openFileForWrite;

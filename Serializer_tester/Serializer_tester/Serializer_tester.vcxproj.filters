@@ -93,6 +93,9 @@
     <ClCompile Include="Buffer_fixture.cpp">
       <Filter>Source Files\Suits</Filter>
     </ClCompile>
+    <ClCompile Include="BufferedDataInfo_fixture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActiveSerializer_fixture.h">
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="Buffer_fixture.h">
       <Filter>Header Files\Suits</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferedDataInfo_fixture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

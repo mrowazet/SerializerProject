@@ -10,6 +10,19 @@ BufferedSerializer::BufferedSerializer(const unsigned int & bufferSize)
 	initBuffer(bufferSize);
 }
 
+void BufferedSerializer::initBuffer(const unsigned int & bufferSize)
+{
+	auto size = bufferSize;
+
+	if (bufferSize < SERIALIZER_BUFFER_MIN)
+		size = SERIALIZER_BUFFER_MIN;
+
+	if (bufferSize > SERIALIZER_BUFFER_MAX)
+		size = SERIALIZER_BUFFER_MAX;
+
+	m_buffer.reset(new Buffer(size)); //protected ctor used - can't use std::make_unique<T>
+}
+
 BufferedSerializer::BufferedSerializer(const Path & dir,
 									   const IOMode & mode,
 									   const unsigned int & bufferSize)
@@ -43,19 +56,6 @@ void BufferedSerializer::moveBufferedSerializerContent(BufferedSerializer && ser
 	m_buffer = std::move(serializer.m_buffer);
 }
 
-void BufferedSerializer::initBuffer(const unsigned int & bufferSize)
-{
-	auto size = bufferSize;
-
-	if (bufferSize < SERIALIZER_BUFFER_MIN)
-		size = SERIALIZER_BUFFER_MIN;
-
-	if (bufferSize > SERIALIZER_BUFFER_MAX)
-		size = SERIALIZER_BUFFER_MAX;
-
-	m_buffer.reset(new Buffer(size)); //protected ctor used - can't use std::make_unique<T>
-}
-
 void BufferedSerializer::writeToFile(const char * data, const unsigned int size)
 {
 }
@@ -74,9 +74,19 @@ void BufferedSerializer::closeFile() //TODO data from buffer should be flushed, 
 	ActiveSerializer::closeFileBase();
 }
 
-unsigned int BufferedSerializer::getBufferSize() const
+unsigned int BufferedSerializer::getMaxBufferSize() const
 {
 	return m_buffer->size();
+}
+
+unsigned int BufferedSerializer::getLastCorrectBufferReadIndex() const
+{
+	return m_bufferedDataInfo.getLastCorrectReadIndex();
+}
+
+unsigned int BufferedSerializer::getLastCorrectBufferWriteIndex() const
+{
+	return m_bufferedDataInfo.getLastCorrectWriteIndex();
 }
 
 void BufferedSerializer::clear()
@@ -185,12 +195,12 @@ const Byte_8 & BufferedSerializer::at(const unsigned int & index) const
 BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 {
 	ASSERT_FILE_OPENED();
-
-
+	
 	if (byteArray.size() < m_buffer->size())
 	{
 		m_buffer->write(byteArray);
 		m_writeIndex += byteArray.size();
+		m_bufferedDataInfo.updateAccessIndexesByAddedDataSize(byteArray.size());
 	}
 	else
 	{

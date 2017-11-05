@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActiveSerializer.h" />
+    <ClInclude Include="BufferedDataInfo.h" />
     <ClInclude Include="BufferedSerializer.h" />
     <ClInclude Include="Byte.h" />
     <ClInclude Include="ByteArray.h" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActiveSerializer.cpp" />
+    <ClCompile Include="BufferedDataInfo.cpp" />
     <ClCompile Include="BufferedSerializer.cpp" />
     <ClCompile Include="Byte.cpp" />
     <ClCompile Include="ByteArray.cpp" />

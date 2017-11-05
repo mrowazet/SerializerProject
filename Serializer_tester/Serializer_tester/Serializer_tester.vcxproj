@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="ActiveSerializerTestable.cpp" />
     <ClCompile Include="ActiveSerializer_fixture.cpp" />
+    <ClCompile Include="BufferedDataInfo_fixture.cpp" />
     <ClCompile Include="BufferedSerializerTestable.cpp" />
     <ClCompile Include="BufferedSerializer_fixture.cpp" />
     <ClCompile Include="ByteArray_fixture.cpp" />
@@ -146,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="ActiveSerializerTestable.h" />
     <ClInclude Include="ActiveSerializer_fixture.h" />
+    <ClInclude Include="BufferedDataInfo_fixture.h" />
     <ClInclude Include="BufferedSerializerTestable.h" />
     <ClInclude Include="BufferedSerializer_fixture.h" />
     <ClInclude Include="ByteArray_fixture.h" />

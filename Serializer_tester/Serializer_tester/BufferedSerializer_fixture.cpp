@@ -69,7 +69,7 @@ TEST_F(BufferedSerializer_fixture, BufferMock_can_be_instantiate)
 TEST_F(BufferedSerializer_fixture, default_consturtor_set_buffer_size_to_minimum)
 {
 	BufferedSerializer serializer;
-	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getBufferSize());
+	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getMaxBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_value_if_in_range)
@@ -77,7 +77,7 @@ TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_value_if_in_range)
 	auto bufferSize = 54;
 	BufferedSerializer serializer(bufferSize);
 
-	EXPECT_EQ(bufferSize, serializer.getBufferSize());
+	EXPECT_EQ(bufferSize, serializer.getMaxBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_min_if_below_min)
@@ -85,7 +85,7 @@ TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_min_if_below_min)
 	auto bufferSize = 15;
 	BufferedSerializer serializer(bufferSize);
 
-	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getBufferSize());
+	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getMaxBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_max_if_grater_than_max)
@@ -93,7 +93,7 @@ TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_max_if_grater_than_ma
 	auto bufferSize = 257;
 	BufferedSerializer serializer(bufferSize);
 
-	EXPECT_EQ(SERIALIZER_BUFFER_MAX, serializer.getBufferSize());
+	EXPECT_EQ(SERIALIZER_BUFFER_MAX, serializer.getMaxBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, file_is_not_opened_when_default_constructor_is_used)
@@ -278,6 +278,23 @@ TEST_F(BufferedSerializer_fixture, Set_indexes_should_return_false_if_file_not_o
 	ASSERT_FALSE(serializer.setWriteIndex(index));
 }
 
+TEST_F(BufferedSerializer_fixture, Last_correct_indexes_updated_after_write_to_buffer)
+{
+	auto serializer = makeSerializerWithDefaultDirOpened();
+
+	auto dataSize = 5u;
+	auto data = makeByteArray(dataSize);
+	
+	EXPECT_CALL(serializer.getBufferMock(), write(A<const ByteArray&>()));
+	serializer << data;
+	
+	auto expectedLastCorrectWriteIndex = dataSize;
+	auto expectedLastCorrectReadIndex = dataSize - 1;
+	auto& bufferInfo = serializer.getBufferDataInfo();
+
+	EXPECT_EQ(expectedLastCorrectWriteIndex, bufferInfo.getLastCorrectWriteIndex());
+	EXPECT_EQ(expectedLastCorrectReadIndex, bufferInfo.getLastCorrectReadIndex());
+}
 
 class TestIndexSetters_fixture : public BufferedSerializer_fixture 							 
 {

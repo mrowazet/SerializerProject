@@ -34,6 +34,7 @@ public:
 
 	BufferMock& getBufferMock();
 	FileHandlingMock& getFileHandlingMock();
+	BufferedDataInfo& getBufferDataInfo();
 
 protected:
 	virtual void writeToFile(const char* data, const unsigned int size);
