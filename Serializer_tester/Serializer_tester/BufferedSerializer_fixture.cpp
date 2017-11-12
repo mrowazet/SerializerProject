@@ -111,6 +111,22 @@ TEST_F(BufferedSerializer_fixture, clearBuffer_clears_internal_buffer)
 	serializer.clearBuffer();
 }
 
+TEST_F(BufferedSerializer_fixture, clearBuffer_clears_access_indexes)
+{
+	BufferedSerializerTestable serializer;
+
+	auto dummyDataSize = 10u;
+	auto& bufferInfo = serializer.getBufferDataInfo();
+	bufferInfo.updateAccessIndexesByAddedDataSize(dummyDataSize);
+	ASSERT_FALSE(bufferInfo.areAccessIndexesCleared());
+
+	auto& bufferMock = serializer.getBufferMock();
+	EXPECT_CALL(bufferMock, clear());
+
+	serializer.clearBuffer();
+	EXPECT_TRUE(bufferInfo.areAccessIndexesCleared());
+}
+
 TEST_F(BufferedSerializer_fixture, clear_clears_buffer)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
@@ -209,34 +225,6 @@ TEST_F(BufferedSerializer_fixture, operators_to_read_write_should_trhow_error_if
 	ASSERT_THROW(serializer >> serializableObject, std::ios_base::failure);
 }
 
-TEST_F(BufferedSerializer_fixture, ByteArray_is_added_to_buffer_if_size_is_lower_than_buffer_size_write_index_zero)
-{
-	auto byteArray = makeByteArray(SERIALIZER_BUFFER_MIN - 1);
-	auto serializer = makeSerializerWithDefaultDirOpened();
-
-	auto& bufferMock = serializer.getBufferMock();
-	EXPECT_CALL(bufferMock, write(byteArray));
-
-	auto& fileMock = serializer.getFileHandlingMock();
-	EXPECT_CALL(fileMock, writeToFile(_, _)).Times(0);
-
-	serializer << byteArray;
-}
-
-TEST_F(BufferedSerializer_fixture, Write_index_should_be_incremented_after_write_of_ByteArray)
-{
-	auto dataSize = 5u;
-	auto byteArray = makeByteArray(dataSize);
-	auto serializer = makeSerializerWithDefaultDirOpened();
-
-	auto& bufferMock = serializer.getBufferMock();
-	EXPECT_CALL(bufferMock, write(testing::A<const ByteArray&>()));
-
-	serializer << byteArray;
-
-	EXPECT_EQ(dataSize, serializer.getWriteIndex());
-}
-
 TEST_F(BufferedSerializer_fixture, Set_get_indexes_works_correctly_within_range)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
@@ -278,20 +266,167 @@ TEST_F(BufferedSerializer_fixture, Set_indexes_should_return_false_if_file_not_o
 	ASSERT_FALSE(serializer.setWriteIndex(index));
 }
 
-TEST_F(BufferedSerializer_fixture, Last_correct_indexes_updated_after_write_to_buffer)
+TEST_F(BufferedSerializer_fixture, Clear_clears_bufferInfo)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
 
 	auto dataSize = 5u;
 	auto data = makeByteArray(dataSize);
-	
+
 	EXPECT_CALL(serializer.getBufferMock(), write(A<const ByteArray&>()));
+	EXPECT_CALL(serializer.getBufferMock(), clear());
 	serializer << data;
-	
+	serializer.clear();
+
 	auto& bufferInfo = serializer.getBufferDataInfo();
-	EXPECT_NE(0, bufferInfo.getLastCorrectWriteIndex());
-	EXPECT_NE(0, bufferInfo.getLastCorrectReadIndex());
+	EXPECT_TRUE(bufferInfo.isCleared());
 }
+
+class TestWriteData_fixture : public BufferedSerializer_fixture
+{
+public:
+	TestWriteData_fixture()
+		:DATA_GRATER_THAN_BUFFER(makeByteArray(DATA_SIZE_20)),
+		 m_serializer(makeSerializerWithDefaultDirOpened()),
+		 m_bufferMock(m_serializer.getBufferMock()),
+		 m_fileHandlingMock(m_serializer.getFileHandlingMock()),
+		 m_bufferInfo(m_serializer.getBufferDataInfo())
+	{
+
+	}
+
+	virtual void SetUp() override
+	{
+
+	}
+
+	virtual void TearDown() override
+	{
+		m_serializer.closeFile();
+	}
+
+protected:
+	const unsigned int DATA_SIZE_5  = 5u;
+	const unsigned int DATA_SIZE_10 = 10u;
+	const unsigned int DATA_SIZE_20 = 20u;
+	const srl::ByteArray DATA_GRATER_THAN_BUFFER;
+
+	srl::BufferedSerializerTestable m_serializer;
+	srl::BufferMock& m_bufferMock;
+	srl::FileHandlingMock& m_fileHandlingMock;
+	srl::BufferedDataInfo& m_bufferInfo;
+};
+
+TEST_F(TestWriteData_fixture, Do_not_buffer_data_if_size_grater_than_buffer)
+{
+	EXPECT_CALL(m_serializer.getBufferMock(), write(A<const ByteArray&>())).Times(0);
+	EXPECT_CALL(m_serializer.getFileHandlingMock(), writeToFile(_, DATA_SIZE_20));
+
+	m_serializer << DATA_GRATER_THAN_BUFFER;
+}
+
+TEST_F(TestWriteData_fixture, Access_indexed_should_be_clear_after_write_data_grater_than_buffer)
+{
+	m_bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_10);
+	ASSERT_FALSE(m_bufferInfo.areAccessIndexesCleared());
+	EXPECT_CALL(m_serializer.getFileHandlingMock(), writeToFile(_, DATA_SIZE_20));
+
+	m_serializer << DATA_GRATER_THAN_BUFFER;
+	EXPECT_TRUE(m_bufferInfo.areAccessIndexesCleared());
+}
+
+TEST_F(TestWriteData_fixture, Buffer_begin_index_should_be_updated_after_write_data_grater_than_buffer)
+{
+	EXPECT_CALL(m_serializer.getFileHandlingMock(), writeToFile(_, DATA_SIZE_20));
+
+	m_serializer << DATA_GRATER_THAN_BUFFER;
+	EXPECT_EQ(DATA_SIZE_20, m_bufferInfo.getBeginIndexRelativelyToFile());
+}
+
+TEST_F(TestWriteData_fixture, Write_index_should_be_incremented_after_write_data_grater_than_buffer)
+{
+	EXPECT_CALL(m_serializer.getFileHandlingMock(), writeToFile(_, DATA_SIZE_20));
+
+	m_serializer << DATA_GRATER_THAN_BUFFER;
+	EXPECT_EQ(DATA_SIZE_20, m_serializer.getWriteIndex());
+}
+
+TEST_F(TestWriteData_fixture, ByteArray_is_added_to_buffer_if_size_is_lower_than_buffer_size_write_index_zero)
+{
+	auto byteArray = makeByteArray(DATA_SIZE_10);
+
+	EXPECT_CALL(m_bufferMock, write(byteArray));
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _)).Times(0);
+
+	m_serializer << byteArray;
+}
+
+TEST_F(TestWriteData_fixture, Write_index_should_be_incremented_after_write_of_ByteArray)
+{
+	auto data = makeByteArray(DATA_SIZE_10);
+
+	EXPECT_CALL(m_bufferMock, write(testing::A<const ByteArray&>()));
+
+	m_serializer << data;
+
+	EXPECT_EQ(data.size(), m_serializer.getWriteIndex());
+}
+
+TEST_F(TestWriteData_fixture, Last_correct_indexes_updated_after_write_to_buffer)
+{
+	auto data = makeByteArray(DATA_SIZE_10);
+
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
+	m_serializer << data;
+
+	EXPECT_NE(0, m_bufferInfo.getLastCorrectWriteIndex());
+	EXPECT_NE(0, m_bufferInfo.getLastCorrectReadIndex());
+}
+
+TEST_F(TestWriteData_fixture, Data_should_be_added_to_buffer_if_enough_space_available)
+{
+	auto data = makeByteArray(DATA_SIZE_5);
+
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _)).Times(0);
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>())).Times(3);
+	m_serializer << data << data << data;
+}
+
+TEST_F(TestWriteData_fixture, BufferInfo_should_be_updated_after_data_addition)
+{
+	auto data = makeByteArray(DATA_SIZE_5);
+
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _)).Times(0);
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>())).Times(3);
+	m_serializer << data << data << data;
+
+	auto expectedLastWriteIndex = 15u;
+	auto expectedLastReadIndex = 14u;
+	EXPECT_EQ(expectedLastWriteIndex, m_bufferInfo.getLastCorrectWriteIndex());
+	EXPECT_EQ(expectedLastReadIndex, m_bufferInfo.getLastCorrectReadIndex());
+}
+
+//TEST_F(TestWriteData_fixture, Flush_should_write_data_from_buffer)
+//{
+//
+//}
+//
+//TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes)
+//{
+//
+//}
+//
+//TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element_exceed_available_space)
+//{
+//	auto data = makeByteArray(DATA_SIZE_10);
+//
+//	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
+//	m_serializer << data;
+//
+//	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
+//	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
+//	m_serializer << data;
+//}
 
 class TestIndexSetters_fixture : public BufferedSerializer_fixture 							 
 {

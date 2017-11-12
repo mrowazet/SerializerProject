@@ -76,6 +76,7 @@ protected:
 	void moveBufferedSerializerContent(BufferedSerializer && serializer);
 	void initBuffer(const unsigned int & bufferSize);
 	void clearIndexes();
+	void clearBufferInfo();
 
 	bool isReadIndexCorrect(const IndexPosition & index) const;
 	bool isWriteIndexCorrect(const IndexPosition & index) const;

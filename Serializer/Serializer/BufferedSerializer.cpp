@@ -95,6 +95,7 @@ void BufferedSerializer::clear()
 	{
 		ActiveSerializer::clearBase();
 		clearBuffer();
+		clearBufferInfo();
 		clearIndexes();
 	}
 }
@@ -102,12 +103,18 @@ void BufferedSerializer::clear()
 void BufferedSerializer::clearBuffer()
 {
 	m_buffer->clear();
+	m_bufferedDataInfo.clearAccessIndexes();
 }
 
 void BufferedSerializer::clearIndexes()
 {
 	m_readIndex = 0;
 	m_writeIndex = 0;
+}
+
+void BufferedSerializer::clearBufferInfo()
+{
+	m_bufferedDataInfo.clear();
 }
 
 unsigned int BufferedSerializer::size() const
@@ -192,6 +199,7 @@ const Byte_8 & BufferedSerializer::at(const unsigned int & index) const
 	return Byte_8();
 }
 
+//TODO should be updated and refactored
 BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 {
 	ASSERT_FILE_OPENED();
@@ -202,9 +210,12 @@ BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 		m_writeIndex += byteArray.size();
 		m_bufferedDataInfo.updateAccessIndexesByAddedDataSize(byteArray.size());
 	}
-	else
+	if(byteArray.size() >= m_buffer->size())
 	{
-
+		m_writeIndex += byteArray.size();
+		m_bufferedDataInfo.clearAccessIndexes();
+		m_bufferedDataInfo.setBeginIndex(m_writeIndex);
+		writeToFile(reinterpret_cast<const char*>(&byteArray[0]), byteArray.size());
 	}
 
 	return *this;

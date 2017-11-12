@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "BufferedSerializerTestable.h"
 
-class BufferedSerializer_fixture : public ::testing::TestWithParam<int>
+class BufferedSerializer_fixture : public ::testing::Test
 {
 public:
 	BufferedSerializer_fixture();
