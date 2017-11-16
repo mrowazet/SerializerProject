@@ -53,15 +53,10 @@ public:
 	//BufferedSerializer specific
 	unsigned int getMaxBufferSize() const;
 	void clearBuffer();
+	void flush();
 
 	//TODO
-	//flushBuffer
-	//getBuffer
-	//reloadBuffer
-	//setBufferWriteIndex
-	//setBufferReadIndex
-	//getBufferWriteIndex
-	//getBufferReadIndex
+	//reloadBuffer with selected data index as start
 	//open after open situation
 
 protected:

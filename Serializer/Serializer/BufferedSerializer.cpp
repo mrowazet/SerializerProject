@@ -106,6 +106,12 @@ void BufferedSerializer::clearBuffer()
 	m_bufferedDataInfo.clearAccessIndexes();
 }
 
+void BufferedSerializer::flush()
+{
+	writeToFile(reinterpret_cast<const char*>(&m_buffer->data()), m_bufferedDataInfo.getLastCorrectWriteIndex());
+	m_bufferedDataInfo.clearAccessIndexes();
+}
+
 void BufferedSerializer::clearIndexes()
 {
 	m_readIndex = 0;
@@ -204,6 +210,7 @@ BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 {
 	ASSERT_FILE_OPENED();
 	
+	//TODO take write index in buffer into consideration!
 	if (byteArray.size() < m_buffer->size())
 	{
 		m_buffer->write(byteArray);
@@ -212,6 +219,7 @@ BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 	}
 	if(byteArray.size() >= m_buffer->size())
 	{
+		//TODO flush buffer here?
 		m_writeIndex += byteArray.size();
 		m_bufferedDataInfo.clearAccessIndexes();
 		m_bufferedDataInfo.setBeginIndex(m_writeIndex);
@@ -219,6 +227,20 @@ BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 	}
 
 	return *this;
+
+	/*TODO implement
+	
+	Case1: writeIndex = n, byteArray.size() < (bufferSize - n) && byteArray.size() < bufferSize
+		--> add data to buffer
+
+	Case2: writeIndex = n, byteArray.size() >= (bufferSize - n) && byteArra.size() < bufferSize
+		--> flush buffer
+		--> add data to buffer
+
+	Case3: writeIndex = n, byteArray.size() > bufferSize
+		-> flushBuffer
+		-> write data to file
+	*/
 }
 
 BufferedSerializer & BufferedSerializer::operator<<(const char * c_str)

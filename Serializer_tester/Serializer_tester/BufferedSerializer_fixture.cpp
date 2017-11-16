@@ -308,6 +308,7 @@ public:
 protected:
 	const unsigned int DATA_SIZE_5  = 5u;
 	const unsigned int DATA_SIZE_10 = 10u;
+	const unsigned int DATA_SIZE_15 = 15u;
 	const unsigned int DATA_SIZE_20 = 20u;
 	const srl::ByteArray DATA_GRATER_THAN_BUFFER;
 
@@ -325,7 +326,7 @@ TEST_F(TestWriteData_fixture, Do_not_buffer_data_if_size_grater_than_buffer)
 	m_serializer << DATA_GRATER_THAN_BUFFER;
 }
 
-TEST_F(TestWriteData_fixture, Access_indexed_should_be_clear_after_write_data_grater_than_buffer)
+TEST_F(TestWriteData_fixture, Access_indexes_should_be_clear_after_write_data_grater_than_buffer)
 {
 	m_bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_10);
 	ASSERT_FALSE(m_bufferInfo.areAccessIndexesCleared());
@@ -406,26 +407,51 @@ TEST_F(TestWriteData_fixture, BufferInfo_should_be_updated_after_data_addition)
 	EXPECT_EQ(expectedLastReadIndex, m_bufferInfo.getLastCorrectReadIndex());
 }
 
-//TEST_F(TestWriteData_fixture, Flush_should_write_data_from_buffer)
-//{
-//
-//}
-//
-//TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes)
-//{
-//
-//}
-//
+TEST_F(TestWriteData_fixture, Flush_should_write_data_from_buffer)
+{
+	auto data = makeByteArray(DATA_SIZE_10);
+
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
+	m_serializer << data;
+
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data));
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
+	m_serializer.flush();
+}
+
+TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes)
+{
+	ASSERT_TRUE(m_bufferInfo.areAccessIndexesCleared());
+	m_bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_5);
+
+	auto data = makeByteArray(DATA_SIZE_5);
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data));
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _));
+
+	m_serializer.flush();
+	EXPECT_TRUE(m_bufferInfo.areAccessIndexesCleared());
+}
+
+//TODO split into two
+//implement buffer testable to reduce number of EXPECT_CALLs on buffer
+
 //TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element_exceed_available_space)
 //{
-//	auto data = makeByteArray(DATA_SIZE_10);
+//	auto data_1 = makeByteArray(DATA_SIZE_10);
+//	auto data_2 = makeByteArray(DATA_SIZE_15);
 //
 //	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-//	m_serializer << data;
+//	m_serializer << data_1;
 //
+//	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data_1));
 //	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
-//	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-//	m_serializer << data;
+//
+//	auto sizeOfTheArrayWrittenToBuffer = 0u;
+//	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()))
+//		.WillOnce(Invoke([&](const auto& arg){sizeOfTheArrayWrittenToBuffer = arg.size();}));
+//	
+//	m_serializer << data_2;
+//	EXPECT_EQ(DATA_SIZE_15, sizeOfTheArrayWrittenToBuffer);
 //}
 
 class TestIndexSetters_fixture : public BufferedSerializer_fixture 							 
