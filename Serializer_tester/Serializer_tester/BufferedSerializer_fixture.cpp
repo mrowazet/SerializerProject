@@ -6,7 +6,21 @@ using namespace srl;
 
 namespace
 {
+	const unsigned int SIZE_WITHIN_RANGE	= 54u;
+	const unsigned int SZIE_LOWER_THAN_MIN	= 15u;
+	const unsigned int SIZE_GRATER_THAN_MAX = 257u;
 
+	const unsigned int EMPTY_FILE_SIZE		= 0u;
+	const unsigned int FILE_SIZE			= 12u;
+
+	const unsigned int INDEX_ZERO			= 0u;
+	const unsigned int WRITE_INDEX			= 4u;
+	const unsigned int READ_INDEX			= 7u;
+
+	const unsigned int DATA_SIZE_5			= 5u;
+	const unsigned int DATA_SIZE_10			= 10u;
+	const unsigned int DATA_SIZE_15			= 15u;
+	const unsigned int DATA_SIZE_20			= 20u;
 }
 
 BufferedSerializer_fixture::BufferedSerializer_fixture()
@@ -36,7 +50,7 @@ srl::BufferedSerializerTestable BufferedSerializer_fixture::makeSerializerWithDe
 	[&](){ ASSERT_TRUE(serializer.isFileOpened()); }();
 
 	auto& fileMock = serializer.getFileHandlingMock();
-	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(SERIALIZER_BUFFER_MIN));
+	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(FILE_SIZE));
 
 	return serializer;
 }
@@ -73,25 +87,19 @@ TEST_F(BufferedSerializer_fixture, default_consturtor_set_buffer_size_to_minimum
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_value_if_in_range)
 {
-	auto bufferSize = 54;
-	BufferedSerializer serializer(bufferSize);
-
-	EXPECT_EQ(bufferSize, serializer.getMaxBufferSize());
+	BufferedSerializer serializer(SIZE_WITHIN_RANGE);
+	EXPECT_EQ(SIZE_WITHIN_RANGE, serializer.getMaxBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_min_if_below_min)
 {
-	auto bufferSize = 15;
-	BufferedSerializer serializer(bufferSize);
-
+	BufferedSerializer serializer(SZIE_LOWER_THAN_MIN);
 	EXPECT_EQ(SERIALIZER_BUFFER_MIN, serializer.getMaxBufferSize());
 }
 
 TEST_F(BufferedSerializer_fixture, maxBufferSize_is_set_to_max_if_grater_than_max)
 {
-	auto bufferSize = 257;
-	BufferedSerializer serializer(bufferSize);
-
+	BufferedSerializer serializer(SIZE_GRATER_THAN_MAX);
 	EXPECT_EQ(SERIALIZER_BUFFER_MAX, serializer.getMaxBufferSize());
 }
 
@@ -114,9 +122,8 @@ TEST_F(BufferedSerializer_fixture, clearBuffer_clears_access_indexes)
 {
 	BufferedSerializerTestable serializer;
 
-	auto dummyDataSize = 10u;
 	auto& bufferInfo = serializer.getBufferDataInfo();
-	bufferInfo.updateAccessIndexesByAddedDataSize(dummyDataSize);
+	bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_5);
 	ASSERT_FALSE(bufferInfo.areAccessIndexesCleared());
 
 	auto& bufferMock = serializer.getBufferMock();
@@ -168,9 +175,8 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_true_if_opened_file_has_size_
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
 
-	auto fileSize = 0;
 	auto& fileMock = serializer.getFileHandlingMock();
-	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(fileSize));
+	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(EMPTY_FILE_SIZE));
 
 	auto& bufferMock = serializer.getBufferMock();
 	EXPECT_CALL(bufferMock, isEmpty()).WillRepeatedly(Return(true));
@@ -183,9 +189,8 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_file_size_is_grater_
 {
 	auto serializer = makeSerializerWithDefaultDirOpened(srl::IOMode::Append);
 	
-	auto fileSize = 10;
 	auto& fileMock = serializer.getFileHandlingMock();
-	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(fileSize));
+	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(DATA_SIZE_5));
 
 	EXPECT_FALSE(serializer.isEmpty());
 	EXPECT_FALSE(serializer);
@@ -195,9 +200,8 @@ TEST_F(BufferedSerializer_fixture, isEmpty_returns_false_if_opened_file_has_size
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
 
-	auto fileSize = 0;
 	auto& fileMock = serializer.getFileHandlingMock();
-	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(fileSize));
+	EXPECT_CALL(fileMock, getFileSize()).WillRepeatedly(Return(EMPTY_FILE_SIZE));
 
 	auto& bufferMock = serializer.getBufferMock();
 	EXPECT_CALL(bufferMock, isEmpty()).WillRepeatedly(Return(false));
@@ -228,49 +232,42 @@ TEST_F(BufferedSerializer_fixture, Set_get_indexes_works_correctly_within_range)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
 
-	ASSERT_EQ(0, serializer.getWriteIndex());
-	ASSERT_EQ(0, serializer.getReadIndex());
+	ASSERT_EQ(INDEX_ZERO, serializer.getWriteIndex());
+	ASSERT_EQ(INDEX_ZERO, serializer.getReadIndex());
 
-	auto writeIndex = 4;
-	auto readIndex = 7;
+	EXPECT_TRUE(serializer.setWriteIndex(WRITE_INDEX));
+	EXPECT_TRUE(serializer.setReadIndex(READ_INDEX));
 
-	EXPECT_TRUE(serializer.setWriteIndex(writeIndex));
-	EXPECT_TRUE(serializer.setReadIndex(readIndex));
-
-	EXPECT_EQ(writeIndex, serializer.getWriteIndex());
-	EXPECT_EQ(readIndex, serializer.getReadIndex());
+	EXPECT_EQ(WRITE_INDEX, serializer.getWriteIndex());
+	EXPECT_EQ(READ_INDEX, serializer.getReadIndex());
 }
 
 TEST_F(BufferedSerializer_fixture, Read_Write_indexes_are_zero_after_clear)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
-	const auto index = 7;
 
-	ASSERT_TRUE(serializer.setReadIndex(index));
-	ASSERT_TRUE(serializer.setWriteIndex(index));
+	ASSERT_TRUE(serializer.setWriteIndex(WRITE_INDEX));
+	ASSERT_TRUE(serializer.setReadIndex(READ_INDEX));
 
 	EXPECT_CALL(serializer.getBufferMock(), clear());
 	serializer.clear();
 
-	EXPECT_EQ(0, serializer.getReadIndex());
-	EXPECT_EQ(0, serializer.getWriteIndex());
+	EXPECT_EQ(INDEX_ZERO, serializer.getReadIndex());
+	EXPECT_EQ(INDEX_ZERO, serializer.getWriteIndex());
 }
 
 TEST_F(BufferedSerializer_fixture, Set_indexes_should_return_false_if_file_not_opened)
 {
 	BufferedSerializerTestable serializer;
-	const auto index = 7;
 
-	ASSERT_FALSE(serializer.setReadIndex(index));
-	ASSERT_FALSE(serializer.setWriteIndex(index));
+	ASSERT_FALSE(serializer.setWriteIndex(WRITE_INDEX));
+	ASSERT_FALSE(serializer.setReadIndex(READ_INDEX));
 }
 
 TEST_F(BufferedSerializer_fixture, Clear_clears_bufferInfo)
 {
 	auto serializer = makeSerializerWithDefaultDirOpened();
-
-	auto dataSize = 5u;
-	auto data = makeByteArray(dataSize);
+	auto data = makeByteArray(DATA_SIZE_5);
 
 	EXPECT_CALL(serializer.getBufferMock(), write(A<const ByteArray&>()));
 	EXPECT_CALL(serializer.getBufferMock(), clear());
@@ -305,10 +302,6 @@ public:
 	}
 
 protected:
-	const unsigned int DATA_SIZE_5  = 5u;
-	const unsigned int DATA_SIZE_10 = 10u;
-	const unsigned int DATA_SIZE_15 = 15u;
-	const unsigned int DATA_SIZE_20 = 20u;
 	const srl::ByteArray DATA_GRATER_THAN_BUFFER;
 
 	srl::BufferedSerializerTestable m_serializer;
@@ -379,8 +372,8 @@ TEST_F(TestWriteData_fixture, Last_correct_indexes_updated_after_write_to_buffer
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
 	m_serializer << data;
 
-	EXPECT_NE(0, m_bufferInfo.getLastCorrectWriteIndex());
-	EXPECT_NE(0, m_bufferInfo.getLastCorrectReadIndex());
+	EXPECT_NE(INDEX_ZERO, m_bufferInfo.getLastCorrectWriteIndex());
+	EXPECT_NE(INDEX_ZERO, m_bufferInfo.getLastCorrectReadIndex());
 }
 
 TEST_F(TestWriteData_fixture, Data_should_be_added_to_buffer_if_enough_space_available)
@@ -467,7 +460,6 @@ public:
 	}
 
 protected:
-	const unsigned int FILE_SIZE = SERIALIZER_BUFFER_MIN;
 	srl::BufferedSerializerTestable m_serializer;
 };
 
