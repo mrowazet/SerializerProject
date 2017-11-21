@@ -4,6 +4,11 @@
 using namespace testing;
 using namespace srl;
 
+namespace
+{
+
+}
+
 BufferedSerializer_fixture::BufferedSerializer_fixture()
 {
 }
@@ -48,8 +53,7 @@ srl::ByteArray BufferedSerializer_fixture::makeByteArray(const unsigned int & si
 
 TEST_F(BufferedSerializer_fixture, canBeConstructedWithMoveSemantic)
 {
-	auto bufferSize = 24;
-	BufferedSerializer serializer(bufferSize);
+	BufferedSerializer serializer;
 	BufferedSerializer destSerializer(std::move(serializer));
 }
 
@@ -59,11 +63,6 @@ TEST_F(BufferedSerializer_fixture, canBeAssignedWithMoveSemantic)
 	BufferedSerializer destSerializer;
 
 	destSerializer = std::move(serializer);
-}
-
-TEST_F(BufferedSerializer_fixture, BufferMock_can_be_instantiate)
-{
-	BufferMock bufferMock;
 }
 
 TEST_F(BufferedSerializer_fixture, default_consturtor_set_buffer_size_to_minimum)
@@ -259,7 +258,7 @@ TEST_F(BufferedSerializer_fixture, Read_Write_indexes_are_zero_after_clear)
 
 TEST_F(BufferedSerializer_fixture, Set_indexes_should_return_false_if_file_not_opened)
 {
-	BufferedSerializer serializer;
+	BufferedSerializerTestable serializer;
 	const auto index = 7;
 
 	ASSERT_FALSE(serializer.setReadIndex(index));

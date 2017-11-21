@@ -33,6 +33,7 @@ public:
 	virtual uintmax_t getFileSize() const override;
 
 	BufferMock& getBufferMock();
+
 	FileHandlingMock& getFileHandlingMock();
 	BufferedDataInfo& getBufferDataInfo();
 

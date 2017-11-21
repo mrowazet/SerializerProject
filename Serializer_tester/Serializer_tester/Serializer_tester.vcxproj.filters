@@ -34,6 +34,9 @@
     <Filter Include="Source Files\Testables">
       <UniqueIdentifier>{9136a7ff-c2ee-4e73-8cbe-29dfc6be7733}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Stub">
+      <UniqueIdentifier>{36e71b04-44fb-4761-a293-7669da4de304}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="maincpp.cpp">
