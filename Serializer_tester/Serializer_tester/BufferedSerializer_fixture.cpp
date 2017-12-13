@@ -445,24 +445,52 @@ TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes)
 	EXPECT_TRUE(m_bufferInfo.areAccessIndexesCleared());
 }
 
-//TODO split into two
-//implement buffer testable to reduce number of EXPECT_CALLs on buffer
+TEST_F(BufferedSerializer_fixture, Data_from_buffer_should_be_flushed_correctly_after_write_index_changed)
+{
+	auto data_1 = makeByteArray(DATA_SIZE_10);
+	
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
+	m_serializer << data_1;
 
-//TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element_exceed_available_space)
-//{
-//	auto data_1 = makeByteArray(DATA_SIZE_10);
-//	auto data_2 = makeByteArray(DATA_SIZE_15);
-//
-//	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-//	m_serializer << data_1;
-//
-//	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data_1));
-//	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
-//
-//	auto sizeOfTheArrayWrittenToBuffer = 0u;
-//	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()))
-//		.WillOnce(Invoke([&](const auto& arg){sizeOfTheArrayWrittenToBuffer = arg.size();}));
-//	
-//	m_serializer << data_2;
-//	EXPECT_EQ(DATA_SIZE_15, sizeOfTheArrayWrittenToBuffer);
-//}
+	m_serializer.setWriteIndex(WRITE_INDEX);
+
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data_1));
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, WRITE_INDEX));
+
+	m_serializer.flush();
+}
+
+TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element_exceed_available_space)
+{
+	auto data_1 = makeByteArray(DATA_SIZE_10);
+	auto data_2 = makeByteArray(DATA_SIZE_15);
+
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
+	m_serializer << data_1;
+
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data_1));
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
+
+	auto sizeOfTheArrayWrittenToBuffer = 0u;
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()))
+		.WillOnce(Invoke([&](const auto& byteArray) {sizeOfTheArrayWrittenToBuffer = byteArray.size(); }));
+
+	m_serializer << data_2;
+	EXPECT_EQ(DATA_SIZE_15, sizeOfTheArrayWrittenToBuffer);
+}
+
+/*TODO implement
+
+* implement buffer testable to reduce number of EXPECT_CALLs on buffer
+
+Case1: writeIndex = n, byteArray.size() < (bufferSize - n) && byteArray.size() < bufferSize
+--> add data to buffer
+
+Case2: writeIndex = n, byteArray.size() >= (bufferSize - n) && byteArra.size() < bufferSize
+--> flush buffer
+--> add data to buffer
+
+Case3: writeIndex = n, byteArray.size() > bufferSize
+-> flushBuffer
+-> write data to file
+*/

@@ -108,7 +108,7 @@ void BufferedSerializer::clearBuffer()
 
 void BufferedSerializer::flush()
 {
-	writeToFile(reinterpret_cast<const char*>(&m_buffer->data()), m_bufferedDataInfo.getLastCorrectWriteIndex());
+	writeToFile(reinterpret_cast<const char*>(&m_buffer->data()), m_writeIndex);
 	m_bufferedDataInfo.clearAccessIndexes();
 }
 
@@ -174,7 +174,7 @@ bool BufferedSerializer::setWriteIndex(const int & index)
 
 bool BufferedSerializer::isWriteIndexCorrect(const IndexPosition & index) const
 {
-	return index <= getFileSize() && index > 0;
+	return index > 0 && index <= getFileSize();
 }
 
 bool BufferedSerializer::setReadIndex(const int & index) const
@@ -192,7 +192,7 @@ bool BufferedSerializer::setReadIndex(const int & index) const
 
 bool BufferedSerializer::isReadIndexCorrect(const IndexPosition & index) const
 {
-	return index < getFileSize() && index > 0;
+	return index > 0 && index < getFileSize();
 }
 
 Byte_8 & BufferedSerializer::at(const unsigned int & index)
@@ -219,7 +219,7 @@ BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 	}
 	if(byteArray.size() >= m_buffer->size())
 	{
-		//TODO flush buffer here?
+		//TODO flush buffer here? flush data 'before' write index!
 		m_writeIndex += byteArray.size();
 		m_bufferedDataInfo.clearAccessIndexes();
 		m_bufferedDataInfo.setBeginIndex(m_writeIndex);
