@@ -26,7 +26,7 @@ BufferedDataInfo::IndexPosition BufferedDataInfo::getBeginIndexRelativelyToFile(
 	return m_beginIndexRelativelyToFile;
 }
 
-void BufferedDataInfo::setBeginIndex(const IndexPosition & index) const
+void BufferedDataInfo::setBeginIndexRelativelyToFile(const IndexPosition & index) const
 {
 	m_beginIndexRelativelyToFile = index;
 }

@@ -381,9 +381,9 @@ TEST_F(TestWriteData_fixture, Write_index_should_be_incremented_after_write_of_B
 
 	EXPECT_CALL(m_bufferMock, write(testing::A<const ByteArray&>()));
 
-	m_serializer << data;
+m_serializer << data;
 
-	EXPECT_EQ(data.size(), m_serializer.getWriteIndex());
+EXPECT_EQ(data.size(), m_serializer.getWriteIndex());
 }
 
 TEST_F(TestWriteData_fixture, Last_correct_indexes_updated_after_write_to_buffer)
@@ -438,6 +438,8 @@ TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes)
 	m_bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_5);
 
 	auto data = makeByteArray(DATA_SIZE_5);
+	m_serializer << data;
+
 	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _));
 
@@ -448,7 +450,7 @@ TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes)
 TEST_F(BufferedSerializer_fixture, Data_from_buffer_should_be_flushed_correctly_after_write_index_changed)
 {
 	auto data_1 = makeByteArray(DATA_SIZE_10);
-	
+
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
 	m_serializer << data_1;
 
@@ -479,6 +481,22 @@ TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element
 	EXPECT_EQ(DATA_SIZE_15, sizeOfTheArrayWrittenToBuffer);
 }
 
+TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_write_directly_to_file_when_data_exceeds_buffer_size)
+{
+	auto data_1 = makeByteArray(DATA_SIZE_10);
+
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
+	m_serializer << data_1;
+
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data_1));
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
+
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_GRATER_THAN_BUFFER.size()));
+	m_serializer << DATA_GRATER_THAN_BUFFER;
+
+	auto expectedWriteIndex = DATA_SIZE_10 + DATA_GRATER_THAN_BUFFER.size();
+	EXPECT_EQ(expectedWriteIndex, m_serializer.getWriteIndex());
+}
 /*TODO implement
 
 * implement buffer testable to reduce number of EXPECT_CALLs on buffer

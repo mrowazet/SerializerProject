@@ -108,8 +108,13 @@ void BufferedSerializer::clearBuffer()
 
 void BufferedSerializer::flush()
 {
-	writeToFile(reinterpret_cast<const char*>(&m_buffer->data()), m_writeIndex);
-	m_bufferedDataInfo.clearAccessIndexes();
+	auto sizeOfDataToFlush = m_writeIndex - m_bufferedDataInfo.getBeginIndexRelativelyToFile();
+
+	if (sizeOfDataToFlush > 0)
+	{
+		writeToFile(reinterpret_cast<const char*>(&m_buffer->data()), sizeOfDataToFlush);
+		m_bufferedDataInfo.clearAccessIndexes();
+	}
 }
 
 void BufferedSerializer::clearIndexes()
@@ -146,7 +151,7 @@ BufferedSerializer::operator bool() const
 
 const ByteArray & BufferedSerializer::getData() const
 {
-	return m_buffer->data();
+return m_buffer->data();
 }
 
 int BufferedSerializer::getWriteIndex() const
@@ -209,27 +214,9 @@ const Byte_8 & BufferedSerializer::at(const unsigned int & index) const
 BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 {
 	ASSERT_FILE_OPENED();
-	
-	//TODO take write index in buffer into consideration!
-	if (byteArray.size() < m_buffer->size())
-	{
-		m_buffer->write(byteArray);
-		m_writeIndex += byteArray.size();
-		m_bufferedDataInfo.updateAccessIndexesByAddedDataSize(byteArray.size());
-	}
-	if(byteArray.size() >= m_buffer->size())
-	{
-		//TODO flush buffer here? flush data 'before' write index!
-		m_writeIndex += byteArray.size();
-		m_bufferedDataInfo.clearAccessIndexes();
-		m_bufferedDataInfo.setBeginIndex(m_writeIndex);
-		writeToFile(reinterpret_cast<const char*>(&byteArray[0]), byteArray.size());
-	}
-
-	return *this;
 
 	/*TODO implement
-	
+
 	Case1: writeIndex = n, byteArray.size() < (bufferSize - n) && byteArray.size() < bufferSize
 		--> add data to buffer
 
@@ -241,6 +228,42 @@ BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 		-> flushBuffer
 		-> write data to file
 	*/
+
+	auto dataSize = byteArray.size();
+
+	if (dataSize >= m_buffer->size())
+	{
+		flush();
+
+		m_writeIndex += dataSize;
+		m_bufferedDataInfo.clearAccessIndexes();
+		m_bufferedDataInfo.setBeginIndexRelativelyToFile(m_writeIndex);
+
+		writeToFile(reinterpret_cast<const char*>(&byteArray[0]), byteArray.size());
+		return *this;
+	}
+
+	auto availableSpaceInBuffer = m_buffer->size() - m_bufferedDataInfo.getLastCorrectWriteIndex();
+
+	if (dataSize >= availableSpaceInBuffer)
+	{
+		flush();
+
+		m_writeIndex += dataSize;
+		m_bufferedDataInfo.clearAccessIndexes();
+		m_bufferedDataInfo.setBeginIndexRelativelyToFile(m_writeIndex);
+
+		m_buffer->write(byteArray);
+
+	}
+	else
+	{
+		m_writeIndex += dataSize;
+		m_bufferedDataInfo.updateAccessIndexesByAddedDataSize(dataSize);
+		m_buffer->write(byteArray);
+	}
+
+	return *this;
 }
 
 BufferedSerializer & BufferedSerializer::operator<<(const char * c_str)

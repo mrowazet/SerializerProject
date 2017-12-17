@@ -15,7 +15,7 @@ public:
 	IndexPosition getLastCorrectReadIndex() const;
 	IndexPosition getBeginIndexRelativelyToFile() const;
 
-	void setBeginIndex(const IndexPosition& index) const;
+	void setBeginIndexRelativelyToFile(const IndexPosition& index) const;
 	void updateAccessIndexesByAddedDataSize(const unsigned int& addedDataSize) const;
 
 	void clearAccessIndexes() const;

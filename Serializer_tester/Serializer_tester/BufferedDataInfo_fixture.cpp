@@ -42,7 +42,7 @@ TEST_F(BufferedDataInfo_fixture, isCleared_return_false_if_beginIndex_differ_fro
 	BufferedDataInfo info;
 
 	auto index = 8u;
-	info.setBeginIndex(index);
+	info.setBeginIndexRelativelyToFile(index);
 
 	EXPECT_FALSE(info.isCleared());
 }
@@ -62,7 +62,7 @@ TEST_F(BufferedDataInfo_fixture, setBeginRelativelyToFile)
 	BufferedDataInfo info;
 
 	auto index = 8u;
-	info.setBeginIndex(index);
+	info.setBeginIndexRelativelyToFile(index);
 
 	EXPECT_EQ(index, info.getBeginIndexRelativelyToFile());
 }
@@ -74,7 +74,7 @@ TEST_F(BufferedDataInfo_fixture, Clear_all_data_by_clear_function)
 	auto index = 4u;
 	auto dataSize = 3u;
 
-	info.setBeginIndex(index);
+	info.setBeginIndexRelativelyToFile(index);
 	info.updateAccessIndexesByAddedDataSize(dataSize);
 
 	info.clear();
@@ -90,7 +90,7 @@ TEST_F(BufferedDataInfo_fixture, Clear_read_write_indexes_only_by_clearAccessInd
 	auto index = 5u;
 	auto dataSize = 8u;
 
-	info.setBeginIndex(index);
+	info.setBeginIndexRelativelyToFile(index);
 	info.updateAccessIndexesByAddedDataSize(dataSize);
 
 	info.clearAccessIndexes();
