@@ -72,6 +72,8 @@ protected:
 	void initBuffer(const unsigned int & bufferSize);
 	void clearIndexes();
 	void clearBufferInfo();
+	bool isAnyDataToFlush() const;
+	void flushDataFromBuffer();
 
 	bool isReadIndexCorrect(const IndexPosition & index) const;
 	bool isWriteIndexCorrect(const IndexPosition & index) const;
@@ -81,6 +83,13 @@ protected:
 
 	virtual void writeToFile(const char* data, const unsigned int size);
 	virtual void readFromFile(const unsigned int size) const;
+	
+	void writeByteArrayGraterThanBuffer(const ByteArray& data);
+	void writeByteArrayGraterThanAvailableSpaceInBuffer(const ByteArray& data);
+	void writeByteArrayLessThanAvailableSpaceInBuffer(const ByteArray& data);
+
+	bool isDataGraterOrEqaulBuffer(const unsigned int dataSize) const;
+	bool isDataGraterOrEqualAvailableFreeSpaceInBuffer(const unsigned int dataSize) const;
 
 	using ActiveSerializer::openFileForRead;
 	using ActiveSerializer::openFileForWrite;

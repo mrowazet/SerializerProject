@@ -108,13 +108,23 @@ void BufferedSerializer::clearBuffer()
 
 void BufferedSerializer::flush()
 {
+	if(isAnyDataToFlush())
+		flushDataFromBuffer();
+}
+
+bool BufferedSerializer::isAnyDataToFlush() const
+{
+	auto sizeOfDataToFlush = m_writeIndex - m_bufferedDataInfo.getBeginIndexRelativelyToFile();
+	return sizeOfDataToFlush > 0;
+}
+
+void BufferedSerializer::flushDataFromBuffer()
+{
 	auto sizeOfDataToFlush = m_writeIndex - m_bufferedDataInfo.getBeginIndexRelativelyToFile();
 
-	if (sizeOfDataToFlush > 0)
-	{
-		writeToFile(reinterpret_cast<const char*>(&m_buffer->data()), sizeOfDataToFlush);
-		m_bufferedDataInfo.clearAccessIndexes();
-	}
+	writeToFile(reinterpret_cast<const char*>(&m_buffer->data()), sizeOfDataToFlush);
+	m_bufferedDataInfo.clearAccessIndexes();
+	m_bufferedDataInfo.setBeginIndexRelativelyToFile(m_writeIndex);
 }
 
 void BufferedSerializer::clearIndexes()
@@ -210,60 +220,69 @@ const Byte_8 & BufferedSerializer::at(const unsigned int & index) const
 	return Byte_8();
 }
 
-//TODO should be updated and refactored
 BufferedSerializer & BufferedSerializer::operator<<(const ByteArray & byteArray)
 {
 	ASSERT_FILE_OPENED();
 
-	/*TODO implement
-
-	Case1: writeIndex = n, byteArray.size() < (bufferSize - n) && byteArray.size() < bufferSize
-		--> add data to buffer
-
-	Case2: writeIndex = n, byteArray.size() >= (bufferSize - n) && byteArra.size() < bufferSize
-		--> flush buffer
-		--> add data to buffer
-
-	Case3: writeIndex = n, byteArray.size() > bufferSize
-		-> flushBuffer
-		-> write data to file
-	*/
-
-	auto dataSize = byteArray.size();
-
-	if (dataSize >= m_buffer->size())
+	if (isDataGraterOrEqaulBuffer(byteArray.size()))
 	{
-		flush();
-
-		m_writeIndex += dataSize;
-		m_bufferedDataInfo.clearAccessIndexes();
-		m_bufferedDataInfo.setBeginIndexRelativelyToFile(m_writeIndex);
-
-		writeToFile(reinterpret_cast<const char*>(&byteArray[0]), byteArray.size());
-		return *this;
-	}
-
-	auto availableSpaceInBuffer = m_buffer->size() - m_bufferedDataInfo.getLastCorrectWriteIndex();
-
-	if (dataSize >= availableSpaceInBuffer)
-	{
-		flush();
-
-		m_writeIndex += dataSize;
-		m_bufferedDataInfo.clearAccessIndexes();
-		m_bufferedDataInfo.setBeginIndexRelativelyToFile(m_writeIndex);
-
-		m_buffer->write(byteArray);
-
+		writeByteArrayGraterThanBuffer(byteArray);
 	}
 	else
 	{
-		m_writeIndex += dataSize;
-		m_bufferedDataInfo.updateAccessIndexesByAddedDataSize(dataSize);
-		m_buffer->write(byteArray);
+		if (isDataGraterOrEqualAvailableFreeSpaceInBuffer(byteArray.size()))
+		{
+			writeByteArrayGraterThanAvailableSpaceInBuffer(byteArray);
+		}
+		else
+		{
+			writeByteArrayLessThanAvailableSpaceInBuffer(byteArray);
+		}
 	}
 
 	return *this;
+}
+
+void BufferedSerializer::writeByteArrayGraterThanBuffer(const ByteArray& data)
+{
+	if(isAnyDataToFlush())
+		flushDataFromBuffer();
+
+	writeToFile(reinterpret_cast<const char*>(&data[0]), data.size());
+
+	m_writeIndex += data.size();
+
+	m_bufferedDataInfo.clearAccessIndexes();
+	m_bufferedDataInfo.setBeginIndexRelativelyToFile(m_writeIndex);
+}
+
+void BufferedSerializer::writeByteArrayGraterThanAvailableSpaceInBuffer(const ByteArray& data)
+{
+	flushDataFromBuffer();
+
+	m_buffer->write(data);
+
+	m_writeIndex += data.size();
+	m_bufferedDataInfo.updateAccessIndexesByAddedDataSize(data.size());
+}
+
+void BufferedSerializer::writeByteArrayLessThanAvailableSpaceInBuffer(const ByteArray& data)
+{
+	m_buffer->write(data);
+
+	m_writeIndex += data.size();
+	m_bufferedDataInfo.updateAccessIndexesByAddedDataSize(data.size());
+}
+
+bool BufferedSerializer::isDataGraterOrEqaulBuffer(const unsigned int dataSize) const
+{
+	return dataSize >= m_buffer->size();
+}
+
+bool BufferedSerializer::isDataGraterOrEqualAvailableFreeSpaceInBuffer(const unsigned int dataSize) const
+{
+	auto availableSpaceInBuffer = m_buffer->size() - m_bufferedDataInfo.getLastCorrectWriteIndex();
+	return dataSize >= availableSpaceInBuffer;
 }
 
 BufferedSerializer & BufferedSerializer::operator<<(const char * c_str)

@@ -341,7 +341,17 @@ TEST_F(TestWriteData_fixture, Do_not_buffer_data_if_size_grater_than_buffer)
 
 TEST_F(TestWriteData_fixture, Access_indexes_should_be_clear_after_write_data_grater_than_buffer)
 {
-	m_bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_10);
+	//m_bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_10);
+	auto byteArray = makeByteArray(DATA_SIZE_10);
+
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(byteArray));
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
+
+	
+	m_serializer << byteArray;
+
+
 	ASSERT_FALSE(m_bufferInfo.areAccessIndexesCleared());
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_20));
 
@@ -432,10 +442,12 @@ TEST_F(TestWriteData_fixture, Flush_should_write_data_from_buffer)
 	m_serializer.flush();
 }
 
-TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes)
+TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes_and_set_begin_to_writeIndex)
 {
 	ASSERT_TRUE(m_bufferInfo.areAccessIndexesCleared());
 	m_bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_5);
+
+	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
 
 	auto data = makeByteArray(DATA_SIZE_5);
 	m_serializer << data;
@@ -445,6 +457,7 @@ TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes)
 
 	m_serializer.flush();
 	EXPECT_TRUE(m_bufferInfo.areAccessIndexesCleared());
+	EXPECT_EQ(DATA_SIZE_5, m_bufferInfo.getBeginIndexRelativelyToFile());
 }
 
 TEST_F(BufferedSerializer_fixture, Data_from_buffer_should_be_flushed_correctly_after_write_index_changed)
@@ -478,7 +491,11 @@ TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element
 		.WillOnce(Invoke([&](const auto& byteArray) {sizeOfTheArrayWrittenToBuffer = byteArray.size(); }));
 
 	m_serializer << data_2;
+
 	EXPECT_EQ(DATA_SIZE_15, sizeOfTheArrayWrittenToBuffer);
+	EXPECT_EQ(DATA_SIZE_10, m_bufferInfo.getBeginIndexRelativelyToFile());
+	EXPECT_EQ(DATA_SIZE_15, m_bufferInfo.getLastCorrectWriteIndex());
+	EXPECT_EQ(DATA_SIZE_15 - 1, m_bufferInfo.getLastCorrectReadIndex());
 }
 
 TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_write_directly_to_file_when_data_exceeds_buffer_size)
@@ -500,15 +517,9 @@ TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_
 /*TODO implement
 
 * implement buffer testable to reduce number of EXPECT_CALLs on buffer
-
-Case1: writeIndex = n, byteArray.size() < (bufferSize - n) && byteArray.size() < bufferSize
---> add data to buffer
-
-Case2: writeIndex = n, byteArray.size() >= (bufferSize - n) && byteArra.size() < bufferSize
---> flush buffer
---> add data to buffer
-
-Case3: writeIndex = n, byteArray.size() > bufferSize
--> flushBuffer
--> write data to file
+* flush() will fail if:
+	- begin index relatively to file is for example 50
+	- then setWrite index is called with for example 40
+	- at the moment setWrite does not trigger buffer reload so size of data to flush is -10!!!
+	- consider also setRead function!
 */
