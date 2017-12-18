@@ -123,7 +123,9 @@ void BufferedSerializer::flushDataFromBuffer()
 {
 	auto sizeOfDataToFlush = m_writeIndex - m_bufferedDataInfo.getBeginIndexRelativelyToFile();
 
-	auto dataBegin = reinterpret_cast<const char*>(&(m_buffer->data())[0]); //todo refactor somehow!
+	auto firstIter = m_buffer->cbegin();
+	auto dataBegin = reinterpret_cast<const char*>(&(*firstIter));
+
 	writeToFile(dataBegin, sizeOfDataToFlush);
 
 	m_bufferedDataInfo.clearAccessIndexes();
@@ -263,6 +265,7 @@ void BufferedSerializer::writeByteArrayGraterThanAvailableSpaceInBuffer(const By
 {
 	flushDataFromBuffer();
 
+	m_buffer->clear(); //todo add tc for that! indexes in buffer should be cleared before write! do that in flush()? clearIndexes should be public? we do not need to zeroed content...
 	m_buffer->write(data);
 
 	m_writeIndex += data.size();

@@ -345,7 +345,7 @@ TEST_F(TestWriteData_fixture, Do_not_buffer_data_if_size_grater_than_buffer)
 TEST_F(TestWriteData_fixture, Access_indexes_should_be_clear_after_write_data_grater_than_buffer)
 {
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
+	EXPECT_CALL(m_bufferMock, cbegin()).WillOnce(Return(BYTE_ARRAY_10.cbegin()));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 
 	m_serializer << BYTE_ARRAY_10;
@@ -423,7 +423,7 @@ TEST_F(TestWriteData_fixture, Flush_should_write_data_from_buffer)
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
 	m_serializer << BYTE_ARRAY_10;
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
+	EXPECT_CALL(m_bufferMock, cbegin()).WillOnce(Return(BYTE_ARRAY_10.cbegin()));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 	m_serializer.flush();
 }
@@ -435,10 +435,9 @@ TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes_and_set_begin_to
 
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
 
-	auto data = makeByteArray(DATA_SIZE_5);
-	m_serializer << data;
+	m_serializer << BYTE_ARRAY_5;
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data));
+	EXPECT_CALL(m_bufferMock, cbegin()).WillOnce(Return(BYTE_ARRAY_5.cbegin()));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _));
 
 	m_serializer.flush();
@@ -453,7 +452,7 @@ TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_correctly_after
 
 	m_serializer.setWriteIndex(WRITE_INDEX);
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
+	EXPECT_CALL(m_bufferMock, cbegin()).WillOnce(Return(BYTE_ARRAY_10.cbegin()));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, WRITE_INDEX));
 
 	m_serializer.flush();
@@ -464,7 +463,7 @@ TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
 	m_serializer << BYTE_ARRAY_10;
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
+	EXPECT_CALL(m_bufferMock, cbegin()).WillOnce(Return(BYTE_ARRAY_10.cbegin()));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 
 	auto sizeOfTheArrayWrittenToBuffer = 0u;
@@ -484,7 +483,7 @@ TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
 	m_serializer << BYTE_ARRAY_10;
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
+	EXPECT_CALL(m_bufferMock, cbegin()).WillOnce(Return(BYTE_ARRAY_10.cbegin()));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, BYTE_ARRAY_20.size()));
@@ -516,10 +515,19 @@ protected:
 //TEST_F(RealSerializer_fixture, writeAndRead)
 //{
 //	EXPECT_TRUE(m_realSerailizer.openFile("plik.bin"));
-//	m_realSerailizer.clear();
+//	m_realSerailizer.clear(); //does not work... file not cleared...
 //
-//	m_realSerailizer << BYTE_ARRAY_15;
-//	m_realSerailizer.flush();
+//	ByteArray aa10(BYTE_ARRAY_10);
+//
+//	ByteArray zeroJeden5;
+//	//zeroJeden5 << "00000001" << "00000001" << "00000001" << "00000001" << "00000001";
+//
+//	ByteArray zeroDwa5;
+//	//zeroDwa5 << "00000010" << "00000010" << "00000010" << "00000010" << "00000010";
+//
+//	//m_realSerailizer << aa10 << zeroJeden5;
+//	//m_realSerailizer << zeroDwa5;
+//	//m_realSerailizer.flush();
 //	m_realSerailizer.closeFile();
 //	
 //	int i = 0;
