@@ -322,13 +322,19 @@ class TestWriteData_fixture : public BufferedSerializer_fixture
 {
 public:
 	TestWriteData_fixture()
-		:DATA_GRATER_THAN_BUFFER(makeByteArray(DATA_SIZE_20))
+		:BYTE_ARRAY_5(makeByteArray(DATA_SIZE_5)),
+		 BYTE_ARRAY_10(makeByteArray(DATA_SIZE_10)),
+		 BYTE_ARRAY_15(makeByteArray(DATA_SIZE_15)),
+		 BYTE_ARRAY_20(makeByteArray(DATA_SIZE_20))
 	{
 
 	}
 
 protected:
-	const srl::ByteArray DATA_GRATER_THAN_BUFFER;
+	const srl::ByteArray BYTE_ARRAY_5;
+	const srl::ByteArray BYTE_ARRAY_10;
+	const srl::ByteArray BYTE_ARRAY_15;
+	const srl::ByteArray BYTE_ARRAY_20;
 };
 
 TEST_F(TestWriteData_fixture, Do_not_buffer_data_if_size_grater_than_buffer)
@@ -336,26 +342,21 @@ TEST_F(TestWriteData_fixture, Do_not_buffer_data_if_size_grater_than_buffer)
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>())).Times(0);
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_20));
 
-	m_serializer << DATA_GRATER_THAN_BUFFER;
+	m_serializer << BYTE_ARRAY_20;
 }
 
 TEST_F(TestWriteData_fixture, Access_indexes_should_be_clear_after_write_data_grater_than_buffer)
 {
-	//m_bufferInfo.updateAccessIndexesByAddedDataSize(DATA_SIZE_10);
-	auto byteArray = makeByteArray(DATA_SIZE_10);
-
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(byteArray));
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 
-	
-	m_serializer << byteArray;
-
+	m_serializer << BYTE_ARRAY_10;
 
 	ASSERT_FALSE(m_bufferInfo.areAccessIndexesCleared());
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_20));
 
-	m_serializer << DATA_GRATER_THAN_BUFFER;
+	m_serializer << BYTE_ARRAY_20;
 	EXPECT_TRUE(m_bufferInfo.areAccessIndexesCleared());
 }
 
@@ -363,7 +364,7 @@ TEST_F(TestWriteData_fixture, Buffer_begin_index_should_be_updated_after_write_d
 {
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_20));
 
-	m_serializer << DATA_GRATER_THAN_BUFFER;
+	m_serializer << BYTE_ARRAY_20;
 	EXPECT_EQ(DATA_SIZE_20, m_bufferInfo.getBeginIndexRelativelyToFile());
 }
 
@@ -371,37 +372,31 @@ TEST_F(TestWriteData_fixture, Write_index_should_be_incremented_after_write_data
 {
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_20));
 
-	m_serializer << DATA_GRATER_THAN_BUFFER;
+	m_serializer << BYTE_ARRAY_20;
 	EXPECT_EQ(DATA_SIZE_20, m_serializer.getWriteIndex());
 }
 
 TEST_F(TestWriteData_fixture, ByteArray_is_added_to_buffer_if_size_is_lower_than_buffer_size_write_index_zero)
 {
-	auto byteArray = makeByteArray(DATA_SIZE_10);
-
-	EXPECT_CALL(m_bufferMock, write(byteArray));
+	EXPECT_CALL(m_bufferMock, write(BYTE_ARRAY_10));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _)).Times(0);
 
-	m_serializer << byteArray;
+	m_serializer << BYTE_ARRAY_10;
 }
 
 TEST_F(TestWriteData_fixture, Write_index_should_be_incremented_after_write_of_ByteArray)
 {
-	auto data = makeByteArray(DATA_SIZE_10);
-
 	EXPECT_CALL(m_bufferMock, write(testing::A<const ByteArray&>()));
 
-m_serializer << data;
+	m_serializer << BYTE_ARRAY_10;
 
-EXPECT_EQ(data.size(), m_serializer.getWriteIndex());
+	EXPECT_EQ(BYTE_ARRAY_10.size(), m_serializer.getWriteIndex());
 }
 
 TEST_F(TestWriteData_fixture, Last_correct_indexes_updated_after_write_to_buffer)
 {
-	auto data = makeByteArray(DATA_SIZE_10);
-
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-	m_serializer << data;
+	m_serializer << BYTE_ARRAY_10;
 
 	EXPECT_NE(INDEX_ZERO, m_bufferInfo.getLastCorrectWriteIndex());
 	EXPECT_NE(INDEX_ZERO, m_bufferInfo.getLastCorrectReadIndex());
@@ -409,20 +404,16 @@ TEST_F(TestWriteData_fixture, Last_correct_indexes_updated_after_write_to_buffer
 
 TEST_F(TestWriteData_fixture, Data_should_be_added_to_buffer_if_enough_space_available)
 {
-	auto data = makeByteArray(DATA_SIZE_5);
-
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _)).Times(0);
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>())).Times(3);
-	m_serializer << data << data << data;
+	m_serializer << BYTE_ARRAY_5 << BYTE_ARRAY_5 << BYTE_ARRAY_5;
 }
 
 TEST_F(TestWriteData_fixture, BufferInfo_should_be_updated_after_data_addition)
 {
-	auto data = makeByteArray(DATA_SIZE_5);
-
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, _)).Times(0);
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>())).Times(3);
-	m_serializer << data << data << data;
+	m_serializer << BYTE_ARRAY_5 << BYTE_ARRAY_5 << BYTE_ARRAY_5;
 
 	auto expectedLastWriteIndex = 15u;
 	auto expectedLastReadIndex = 14u;
@@ -432,12 +423,10 @@ TEST_F(TestWriteData_fixture, BufferInfo_should_be_updated_after_data_addition)
 
 TEST_F(TestWriteData_fixture, Flush_should_write_data_from_buffer)
 {
-	auto data = makeByteArray(DATA_SIZE_10);
-
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-	m_serializer << data;
+	m_serializer << BYTE_ARRAY_10;
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data));
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 	m_serializer.flush();
 }
@@ -460,16 +449,14 @@ TEST_F(TestWriteData_fixture, Flush_should_clear_access_indexes_and_set_begin_to
 	EXPECT_EQ(DATA_SIZE_5, m_bufferInfo.getBeginIndexRelativelyToFile());
 }
 
-TEST_F(BufferedSerializer_fixture, Data_from_buffer_should_be_flushed_correctly_after_write_index_changed)
+TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_correctly_after_write_index_changed)
 {
-	auto data_1 = makeByteArray(DATA_SIZE_10);
-
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-	m_serializer << data_1;
+	m_serializer << BYTE_ARRAY_10;
 
 	m_serializer.setWriteIndex(WRITE_INDEX);
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data_1));
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, WRITE_INDEX));
 
 	m_serializer.flush();
@@ -477,20 +464,17 @@ TEST_F(BufferedSerializer_fixture, Data_from_buffer_should_be_flushed_correctly_
 
 TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element_exceed_available_space)
 {
-	auto data_1 = makeByteArray(DATA_SIZE_10);
-	auto data_2 = makeByteArray(DATA_SIZE_15);
-
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-	m_serializer << data_1;
+	m_serializer << BYTE_ARRAY_10;
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data_1));
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 
 	auto sizeOfTheArrayWrittenToBuffer = 0u;
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()))
 		.WillOnce(Invoke([&](const auto& byteArray) {sizeOfTheArrayWrittenToBuffer = byteArray.size(); }));
 
-	m_serializer << data_2;
+	m_serializer << BYTE_ARRAY_15;
 
 	EXPECT_EQ(DATA_SIZE_15, sizeOfTheArrayWrittenToBuffer);
 	EXPECT_EQ(DATA_SIZE_10, m_bufferInfo.getBeginIndexRelativelyToFile());
@@ -500,18 +484,16 @@ TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element
 
 TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_write_directly_to_file_when_data_exceeds_buffer_size)
 {
-	auto data_1 = makeByteArray(DATA_SIZE_10);
-
 	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()));
-	m_serializer << data_1;
+	m_serializer << BYTE_ARRAY_10;
 
-	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(data_1));
+	EXPECT_CALL(m_bufferMock, data()).WillOnce(ReturnRef(BYTE_ARRAY_10));
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 
-	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_GRATER_THAN_BUFFER.size()));
-	m_serializer << DATA_GRATER_THAN_BUFFER;
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, BYTE_ARRAY_20.size()));
+	m_serializer << BYTE_ARRAY_20;
 
-	auto expectedWriteIndex = DATA_SIZE_10 + DATA_GRATER_THAN_BUFFER.size();
+	auto expectedWriteIndex = DATA_SIZE_10 + BYTE_ARRAY_20.size();
 	EXPECT_EQ(expectedWriteIndex, m_serializer.getWriteIndex());
 }
 /*TODO implement
@@ -521,5 +503,6 @@ TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_
 	- begin index relatively to file is for example 50
 	- then setWrite index is called with for example 40
 	- at the moment setWrite does not trigger buffer reload so size of data to flush is -10!!!
+	- reload for 'set' can be implemented as 'lazy'
 	- consider also setRead function!
 */
