@@ -518,13 +518,7 @@ protected:
 //	EXPECT_TRUE(m_realSerailizer.openFile("plik.bin"));
 //	m_realSerailizer.clear();
 //
-//	ByteArray b;
-//	b << "11111111";
-//
-//	m_realSerailizer << BYTE_ARRAY_10;
-//	m_realSerailizer.flush();
-//	m_realSerailizer << BYTE_ARRAY_10;
-//	m_realSerailizer.clear();
+//	m_realSerailizer << BYTE_ARRAY_15;
 //	m_realSerailizer.flush();
 //	m_realSerailizer.closeFile();
 //	

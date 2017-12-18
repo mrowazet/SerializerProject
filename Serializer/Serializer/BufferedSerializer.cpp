@@ -123,7 +123,9 @@ void BufferedSerializer::flushDataFromBuffer()
 {
 	auto sizeOfDataToFlush = m_writeIndex - m_bufferedDataInfo.getBeginIndexRelativelyToFile();
 
-	writeToFile(reinterpret_cast<const char*>(&m_buffer->data()), sizeOfDataToFlush);
+	auto dataBegin = reinterpret_cast<const char*>(&(m_buffer->data())[0]); //todo refactor somehow!
+	writeToFile(dataBegin, sizeOfDataToFlush);
+
 	m_bufferedDataInfo.clearAccessIndexes();
 	m_bufferedDataInfo.setBeginIndexRelativelyToFile(m_writeIndex);
 }
