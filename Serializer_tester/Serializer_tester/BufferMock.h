@@ -24,6 +24,14 @@ namespace srl
 		MOCK_METHOD1(setWriteIndex, void(const int&));
 		MOCK_CONST_METHOD1(setReadIndex, void(const int&));
 
+		MOCK_METHOD0(begin, Iter());
+		MOCK_CONST_METHOD0(begin, CIter());
+		MOCK_CONST_METHOD0(cbegin, CIter());
+
+		MOCK_METHOD0(end, Iter());
+		MOCK_CONST_METHOD0(end, CIter());
+		MOCK_CONST_METHOD0(cend, CIter());
+
 		virtual operator bool() const override
 		{
 			return isEmpty();

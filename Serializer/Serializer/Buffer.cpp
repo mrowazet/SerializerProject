@@ -148,4 +148,34 @@ void Buffer::fitInternalBuffer()
 	m_data.resize(m_bufferSize);
 }
 
+Buffer::Iter Buffer::begin()
+{
+	return m_data.begin();
+}
+
+Buffer::CIter Buffer::begin() const
+{
+	return cbegin();
+}
+
+Buffer::CIter Buffer::cbegin() const
+{
+	return m_data.cbegin();
+}
+
+Buffer::Iter Buffer::end()
+{
+	return end();
+}
+
+Buffer::CIter Buffer::end() const
+{
+	return cend();
+}
+
+Buffer::CIter Buffer::cend() const
+{
+	return m_data.cend();
+}
+
 } //end of namespace

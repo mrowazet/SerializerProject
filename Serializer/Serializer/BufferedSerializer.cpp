@@ -58,6 +58,7 @@ void BufferedSerializer::moveBufferedSerializerContent(BufferedSerializer && ser
 
 void BufferedSerializer::writeToFile(const char * data, const unsigned int size)
 {
+	m_file->write(data, size);
 }
 
 void BufferedSerializer::readFromFile(const unsigned int size) const

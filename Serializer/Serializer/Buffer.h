@@ -42,6 +42,14 @@ public:
 	virtual void setReadIndex(const int & index) const override;
 	virtual void setWriteIndex(const int & index) override;
 
+	virtual Iter begin() override;
+	virtual CIter begin() const override;
+	virtual CIter cbegin() const override;
+
+	virtual Iter end() override;
+	virtual CIter end() const override;
+	virtual CIter cend() const override;
+
 protected:
 	unsigned int m_bufferSize;
 

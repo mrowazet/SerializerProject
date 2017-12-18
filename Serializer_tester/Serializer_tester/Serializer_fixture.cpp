@@ -415,7 +415,6 @@ TEST_F(Serializer_fixture, Set_write_index_after_last_element_and_add_byte)
 	serializer << testByte;
 	EXPECT_EQ("00111100000000000000000000000000", serializer.getData().getAsString());
 
-	//Trigger and Check
 	const int Index = serializer.size();
 	serializer.setWriteIndex(Index);
 

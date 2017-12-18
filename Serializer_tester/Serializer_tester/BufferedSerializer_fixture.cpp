@@ -37,6 +37,11 @@ public:
 	virtual void TearDown() override;
 
 protected:
+	const srl::ByteArray BYTE_ARRAY_5;
+	const srl::ByteArray BYTE_ARRAY_10;
+	const srl::ByteArray BYTE_ARRAY_15;
+	const srl::ByteArray BYTE_ARRAY_20;
+
 	srl::BufferedSerializerTestable m_serializer;
 	srl::BufferMock& m_bufferMock;
 	srl::FileHandlingMock& m_fileHandlingMock;
@@ -51,7 +56,11 @@ BufferedSerializer_Base::BufferedSerializer_Base()
 	:m_serializer(makeSerializerWithDefaultDirOpened()),
 	 m_bufferMock(m_serializer.getBufferMock()),
 	 m_fileHandlingMock(m_serializer.getFileHandlingMock()),
-	 m_bufferInfo(m_serializer.getBufferDataInfo())
+	 m_bufferInfo(m_serializer.getBufferDataInfo()),
+	 BYTE_ARRAY_5(makeByteArray(DATA_SIZE_5)),
+	 BYTE_ARRAY_10(makeByteArray(DATA_SIZE_10)),
+	 BYTE_ARRAY_15(makeByteArray(DATA_SIZE_15)),
+	 BYTE_ARRAY_20(makeByteArray(DATA_SIZE_20))
 {
 
 }
@@ -321,20 +330,8 @@ TEST_F(BufferedSerializer_fixture, Set_read_write_should_return_false_if_lower_t
 class TestWriteData_fixture : public BufferedSerializer_fixture
 {
 public:
-	TestWriteData_fixture()
-		:BYTE_ARRAY_5(makeByteArray(DATA_SIZE_5)),
-		 BYTE_ARRAY_10(makeByteArray(DATA_SIZE_10)),
-		 BYTE_ARRAY_15(makeByteArray(DATA_SIZE_15)),
-		 BYTE_ARRAY_20(makeByteArray(DATA_SIZE_20))
-	{
+	TestWriteData_fixture() = default;
 
-	}
-
-protected:
-	const srl::ByteArray BYTE_ARRAY_5;
-	const srl::ByteArray BYTE_ARRAY_10;
-	const srl::ByteArray BYTE_ARRAY_15;
-	const srl::ByteArray BYTE_ARRAY_20;
 };
 
 TEST_F(TestWriteData_fixture, Do_not_buffer_data_if_size_grater_than_buffer)
@@ -498,7 +495,6 @@ TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_
 }
 /*TODO implement
 
-* implement buffer testable to reduce number of EXPECT_CALLs on buffer
 * flush() will fail if:
 	- begin index relatively to file is for example 50
 	- then setWrite index is called with for example 40
@@ -506,3 +502,31 @@ TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_
 	- reload for 'set' can be implemented as 'lazy'
 	- consider also setRead function!
 */
+
+class RealSerializer_fixture : public BufferedSerializer_Base
+{
+public:
+	RealSerializer_fixture() = default;
+
+protected:
+	srl::BufferedSerializer m_realSerailizer;
+
+};
+
+//TEST_F(RealSerializer_fixture, writeAndRead)
+//{
+//	EXPECT_TRUE(m_realSerailizer.openFile("plik.bin"));
+//	m_realSerailizer.clear();
+//
+//	ByteArray b;
+//	b << "11111111";
+//
+//	m_realSerailizer << BYTE_ARRAY_10;
+//	m_realSerailizer.flush();
+//	m_realSerailizer << BYTE_ARRAY_10;
+//	m_realSerailizer.clear();
+//	m_realSerailizer.flush();
+//	m_realSerailizer.closeFile();
+//	
+//	int i = 0;
+//}

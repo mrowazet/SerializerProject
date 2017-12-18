@@ -10,6 +10,9 @@ namespace srl
 class IBuffer
 {
 public:
+	using Iter = ByteArray::Iter;
+	using CIter = ByteArray::CIter;
+
 	IBuffer() = default;
 	virtual ~IBuffer() = default;
 
@@ -38,12 +41,13 @@ public:
 
 	virtual const srl::ByteArray & data() const = 0;
 
-	//TODO
-	/* 
-		Performance improvement
-		function operator[] can be added to return ptr to memory
-		then we can write directly in internal buffer
-	*/
+	virtual Iter begin() = 0;
+	virtual CIter begin() const = 0;
+	virtual CIter cbegin() const = 0;
+
+	virtual Iter end() = 0;
+	virtual CIter end() const = 0;
+	virtual CIter cend() const = 0;
 };
 
 } //end of namespace

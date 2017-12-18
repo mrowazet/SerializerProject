@@ -40,6 +40,36 @@ public:
 		return *this;
 	}
 
+	Iter begin()
+	{
+		return internalData.begin();
+	}
+
+	CIter begin() const
+	{
+		return cbegin();
+	}
+
+	CIter cbegin() const
+	{
+		return internalData.cbegin();
+	}
+
+	Iter end()
+	{
+		return internalData.end();
+	}
+
+	CIter end() const
+	{
+		return cend();
+	}
+
+	CIter cend() const
+	{
+		return internalData.cend();
+	}
+
 	using Buffer::m_readIndex;
 	using Buffer::m_writeIndex;
 	ByteArray& internalData;
