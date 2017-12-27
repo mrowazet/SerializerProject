@@ -101,8 +101,7 @@ void Buffer::write(const ByteArray & byteArray)
 
 Byte_8 Buffer::read() const
 {
-	m_readIndex--;
-	return m_data[m_readIndex];
+	return m_data[m_readIndex++];
 }
 
 ByteArray Buffer::read(const int & size) const

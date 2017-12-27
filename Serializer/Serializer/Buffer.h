@@ -27,6 +27,7 @@ public:
 	virtual bool isEmpty() const override;
 	virtual operator bool() const override;
 	virtual void clear() override;
+	virtual void clearIndexes() override;
 
 	virtual void write(const Byte_8 & byte) override;
 	virtual void write(const ByteArray & byteArray) override;
@@ -57,7 +58,6 @@ protected:
 	void copyBufferContent(const Buffer & sourceBuffer);
 
 	void fitInternalBuffer();
-	void clearIndexes();
 	
 	ByteArray m_data;
 	mutable unsigned int m_readIndex = 0;

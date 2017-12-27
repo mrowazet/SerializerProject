@@ -424,7 +424,9 @@ TEST_F(TestWriteData_fixture, Flush_should_write_data_from_buffer)
 	m_serializer << BYTE_ARRAY_10;
 
 	EXPECT_CALL(m_bufferMock, cbegin()).WillOnce(Return(BYTE_ARRAY_10.cbegin()));
-	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
+
+	auto expectedDataAddress = reinterpret_cast<const char*>(&(*BYTE_ARRAY_10.cbegin()));
+	EXPECT_CALL(m_fileHandlingMock, writeToFile(expectedDataAddress, DATA_SIZE_10));
 	m_serializer.flush();
 }
 
@@ -467,8 +469,13 @@ TEST_F(TestWriteData_fixture, Data_from_buffer_should_be_flushed_if_next_element
 	EXPECT_CALL(m_fileHandlingMock, writeToFile(_, DATA_SIZE_10));
 
 	auto sizeOfTheArrayWrittenToBuffer = 0u;
-	EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()))
-		.WillOnce(Invoke([&](const auto& byteArray) {sizeOfTheArrayWrittenToBuffer = byteArray.size(); }));
+	{
+		InSequence seq;
+			
+		EXPECT_CALL(m_bufferMock, clearIndexes());
+		EXPECT_CALL(m_bufferMock, write(A<const ByteArray&>()))
+			.WillOnce(Invoke([&](const auto& byteArray) {sizeOfTheArrayWrittenToBuffer = byteArray.size(); }));		
+	}
 
 	m_serializer << BYTE_ARRAY_15;
 

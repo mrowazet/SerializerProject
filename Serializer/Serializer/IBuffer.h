@@ -26,6 +26,7 @@ public:
 	virtual bool isEmpty() const = 0;
 	virtual operator bool() const = 0;
 	virtual void clear() = 0;
+	virtual void clearIndexes() = 0;
 
 	virtual void write(const Byte_8 & byte) = 0;
 	virtual void write(const ByteArray & byteArray) = 0;

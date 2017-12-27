@@ -3,6 +3,11 @@
 using namespace testing;
 using namespace srl;
 
+namespace
+{
+	const unsigned int INDEX_ZERO = 0u;
+}
+
 Buffer_fixture::Buffer_fixture()
 {
 }
@@ -181,6 +186,25 @@ TEST_F(Buffer_fixture, internal_buffer_is_the_same_size_after_clear)
 	EXPECT_EQ(SERIALIZER_BUFFER_MIN, buffer.size());
 }
 
+TEST_F(Buffer_fixture, should_clear_access_indexes_but_data_should_not_be_zeroed_after_call_clearIndexes)
+{
+	const Byte_8 BYTE("01010101");
+	ByteArray byteArray;
+	byteArray << BYTE << BYTE << BYTE;
+
+	BufferTestable buffer;
+	buffer.write(byteArray);
+	buffer.read();
+
+	ASSERT_FALSE(buffer.isEmpty());
+
+	buffer.clearIndexes();
+
+	EXPECT_FALSE(buffer.isEmpty());
+	EXPECT_EQ(INDEX_ZERO, buffer.getReadIndex());
+	EXPECT_EQ(INDEX_ZERO, buffer.getWriteIndex());
+}
+
 TEST_F(Buffer_fixture, write_byte_stores_data_in_internal_buffer)
 {
 	Byte_8 byte("11111111");
@@ -202,28 +226,30 @@ TEST_F(Buffer_fixture, write_byte_increment_write_indexes_by_1)
 	EXPECT_EQ(expectedReadPosition, buffer.m_readIndex);
 }
 
-TEST_F(Buffer_fixture, read_byte_returns_last_stored_byte)
+TEST_F(Buffer_fixture, read_byte_returns_firstly_stored_byte)
 {
 	Byte_8 byte("11111111");
+	Byte_8 anotherByte("01010101");
 	BufferTestable buffer;
+
 	buffer.write(byte);
-	buffer.m_readIndex = 1;
+	buffer.write(anotherByte);
 
 	auto loadedByte = buffer.read();
 	EXPECT_EQ(byte, loadedByte);
 }
 
-TEST_F(Buffer_fixture, read_byte_decrement_position_by_1)
+TEST_F(Buffer_fixture, read_byte_incerment_read_position_by_1)
 {
 	Byte_8 byte("11111111");
 	BufferTestable buffer;
+	
 	buffer.write(byte);
-	buffer.m_readIndex = 1;
-
+	buffer.write(byte);
 	buffer.read();
 
-	auto expectedWritePosition = 1u;
-	auto expectedReadPosition = 0u;
+	auto expectedWritePosition = 2u;
+	auto expectedReadPosition = 1u;
 	EXPECT_EQ(expectedWritePosition, buffer.m_writeIndex);
 	EXPECT_EQ(expectedReadPosition, buffer.m_readIndex);
 }

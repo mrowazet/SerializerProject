@@ -265,7 +265,7 @@ void BufferedSerializer::writeByteArrayGraterThanAvailableSpaceInBuffer(const By
 {
 	flushDataFromBuffer();
 
-	m_buffer->clear(); //todo add tc for that! indexes in buffer should be cleared before write! do that in flush()? clearIndexes should be public? we do not need to zeroed content...
+	m_buffer->clearIndexes();
 	m_buffer->write(data);
 
 	m_writeIndex += data.size();
