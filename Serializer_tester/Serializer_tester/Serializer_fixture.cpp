@@ -803,6 +803,7 @@ TEST_F(Serializer_fixture, Write_read_empty_string)
 	serializer >> result;
 
 	EXPECT_EQ(EmptyString, result);
+	EXPECT_EQ(BYTE_4, serializer.getReadIndex());
 }
 
 TEST_F(Serializer_fixture, Method_getAsString_called_when_serialize_used)

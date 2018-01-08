@@ -28,6 +28,7 @@ public:
 	virtual void clear() = 0;
 	virtual void clearIndexes() = 0;
 
+	virtual void write(const unsigned int & unsignedInt) = 0;
 	virtual void write(const Byte_8 & byte) = 0;
 	virtual void write(const ByteArray & byteArray) = 0;
 

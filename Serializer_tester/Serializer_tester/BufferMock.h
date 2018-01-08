@@ -13,6 +13,7 @@ namespace srl
 		MOCK_METHOD0(clearIndexes, void());
 		MOCK_CONST_METHOD0(data, const srl::ByteArray&());
 
+		MOCK_METHOD1(write, void(const unsigned int&));
 		MOCK_METHOD1(write, void(const Byte_8&));
 		MOCK_METHOD1(write, void(const ByteArray&));
 

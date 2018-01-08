@@ -87,7 +87,19 @@ void Buffer::clearIndexes()
 	m_writeIndex = 0;
 }
 
-void Buffer::write(const Byte_8 & byte) 
+void Buffer::write(const unsigned int & unsignedInt) //TODO add template to store primitive types
+{
+	static auto size = sizeof(unsignedInt);
+
+	const char* data = reinterpret_cast<const char*>(&unsignedInt);
+
+	for (auto i = 0u; i < size; i++, data++)
+		m_data[m_writeIndex + i] = *data;
+
+	m_writeIndex += size;
+}
+
+void Buffer::write(const Byte_8 & byte)
 {
 	m_data[m_writeIndex] = byte;
 	m_writeIndex++;

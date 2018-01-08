@@ -29,6 +29,7 @@ public:
 	virtual void clear() override;
 	virtual void clearIndexes() override;
 
+	virtual void write(const unsigned int & unsignedInt) override;
 	virtual void write(const Byte_8 & byte) override;
 	virtual void write(const ByteArray & byteArray) override;
 

@@ -520,14 +520,14 @@ protected:
 };
 
 //Dev purpose only - should be deleted when read function is ready
-TEST_F(BufferedSerializer_functionalTest, writeAndRead)
-{
-	EXPECT_TRUE(m_realSerailizer.openFile("a.bin"));
-	m_realSerailizer.clear();
-
-	ByteArray array(BYTE_ARRAY_10);
-	m_realSerailizer << array;
-
-	m_realSerailizer.flush();
-	m_realSerailizer.closeFile();
-}
+//TEST_F(BufferedSerializer_functionalTest, writeAndRead)
+//{
+//	EXPECT_TRUE(m_realSerailizer.openFile("a.bin"));
+//	m_realSerailizer.clear();
+//
+//	ByteArray array(BYTE_ARRAY_10);
+//	m_realSerailizer << array;
+//
+//	m_realSerailizer.flush();
+//	m_realSerailizer.closeFile();
+//}

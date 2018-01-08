@@ -333,3 +333,16 @@ TEST_F(Buffer_fixture, read_as_ByteArray_increments_readIndex)
 	auto expectedReadIndex = SERIALIZER_BUFFER_MIN;
 	EXPECT_EQ(SERIALIZER_BUFFER_MIN, buffer.getReadIndex());
 }
+
+TEST_F(Buffer_fixture, unsigned_int_is_correcty_stored_in_buffer)
+{
+	BufferTestable buffer(SERIALIZER_BUFFER_MIN);
+
+	auto testUInt = 13u;
+	buffer.write(testUInt);
+
+	auto storedValue = reinterpret_cast<const unsigned int*>(&buffer.internalData[0]);
+
+	EXPECT_EQ(testUInt, *storedValue);
+	EXPECT_EQ(BYTE_4, buffer.getWriteIndex());
+}
