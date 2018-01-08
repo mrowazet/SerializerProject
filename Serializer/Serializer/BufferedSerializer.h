@@ -91,6 +91,12 @@ protected:
 	bool isDataGraterOrEqaulBuffer(const unsigned int dataSize) const;
 	bool isDataGraterOrEqualAvailableFreeSpaceInBuffer(const unsigned int dataSize) const;
 
+	template<typename DataType>
+	const char* getDataPtr(const DataType& data)
+	{
+		return reinterpret_cast<const char*>(&data);
+	}
+
 	using ActiveSerializer::openFileForRead;
 	using ActiveSerializer::openFileForWrite;
 	using ActiveSerializer::openFileForReadAndWrite;

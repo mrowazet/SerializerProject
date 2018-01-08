@@ -253,7 +253,7 @@ void BufferedSerializer::writeByteArrayGraterThanBuffer(const ByteArray& data)
 	if(isAnyDataToFlush())
 		flushDataFromBuffer();
 
-	writeToFile(reinterpret_cast<const char*>(&data[0]), data.size());
+	writeToFile(getDataPtr(data[0]), data.size());
 
 	m_writeIndex += data.size();
 
