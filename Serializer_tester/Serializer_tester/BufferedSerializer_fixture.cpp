@@ -509,33 +509,25 @@ TEST_F(TestWriteData_fixture, Data_should_be_flushed_and_next_element_should_be_
 	- consider also setRead function!
 */
 
-class RealSerializer_fixture : public BufferedSerializer_Base
+class BufferedSerializer_functionalTest : public BufferedSerializer_Base
 {
 public:
-	RealSerializer_fixture() = default;
+	BufferedSerializer_functionalTest() = default;
 
 protected:
 	srl::BufferedSerializer m_realSerailizer;
 
 };
 
-//TEST_F(RealSerializer_fixture, writeAndRead)
-//{
-//	EXPECT_TRUE(m_realSerailizer.openFile("plik.bin"));
-//	m_realSerailizer.clear(); //does not work... file not cleared...
-//
-//	ByteArray aa10(BYTE_ARRAY_10);
-//
-//	ByteArray zeroJeden5;
-//	//zeroJeden5 << "00000001" << "00000001" << "00000001" << "00000001" << "00000001";
-//
-//	ByteArray zeroDwa5;
-//	//zeroDwa5 << "00000010" << "00000010" << "00000010" << "00000010" << "00000010";
-//
-//	//m_realSerailizer << aa10 << zeroJeden5;
-//	//m_realSerailizer << zeroDwa5;
-//	//m_realSerailizer.flush();
-//	m_realSerailizer.closeFile();
-//	
-//	int i = 0;
-//}
+//Dev purpose only - should be deleted when read function is ready
+TEST_F(BufferedSerializer_functionalTest, writeAndRead)
+{
+	EXPECT_TRUE(m_realSerailizer.openFile("a.bin"));
+	m_realSerailizer.clear();
+
+	ByteArray array(BYTE_ARRAY_10);
+	m_realSerailizer << array;
+
+	m_realSerailizer.flush();
+	m_realSerailizer.closeFile();
+}
